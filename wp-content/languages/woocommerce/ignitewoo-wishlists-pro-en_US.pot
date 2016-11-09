@@ -1,0 +1,629 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ignitewoo-wishlists-pro 3.1.1\n"
+"POT-Creation-Date: 2016-06-10 09:13-0500\n"
+"PO-Revision-Date: 2016-06-10 09:13-0500\n"
+"Last-Translator: \n"
+"Language-Team: THINKcreativeGroup\n"
+"Language: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+
+#: class-ignitewoo-integration.php:24
+#: woocommerce-wishlists-admin.php:48
+msgid "Settings"
+msgstr ""
+
+#: woocommerce-wishlists-admin.php:9
+msgid "IgniteWoo Wishlists"
+msgstr ""
+
+#: woocommerce-wishlists-admin.php:11
+msgid "Adjust the settings to suit your needs"
+msgstr ""
+
+#: woocommerce-wishlists-admin.php:52
+msgid "Allow Guest Wishlists"
+msgstr ""
+
+#: woocommerce-wishlists-admin.php:53
+msgid ""
+"Allow non-logged in users to create wishlists. NOTE that guest wishlists do "
+"not include the ability for people to buy an item for the wishlist owner."
+msgstr ""
+
+#: woocommerce-wishlists-admin.php:54
+msgid "Enable"
+msgstr ""
+
+#: woocommerce-wishlists-admin.php:59
+msgid "Button or Link"
+msgstr ""
+
+#: woocommerce-wishlists-admin.php:60
+msgid "Select the Add to Wishlist style to use on product pages"
+msgstr ""
+
+#: woocommerce-wishlists-admin.php:88
+msgid "Button or Link Text"
+msgstr ""
+
+#: woocommerce-wishlists-admin.php:94
+msgid "In Your List"
+msgstr ""
+
+#: woocommerce-wishlists-admin.php:95
+msgid ""
+"Text to display on the product page when the item is in one of the user's "
+"wishlists"
+msgstr ""
+
+#: woocommerce-wishlists.php:226
+msgid "Select an option first"
+msgstr ""
+
+#: woocommerce-wishlists.php:343
+msgid "Your browser is not accepting cookies"
+msgstr ""
+
+#: woocommerce-wishlists.php:350
+msgid "You cannot use the wishlist feature"
+msgstr ""
+
+#: woocommerce-wishlists.php:373
+msgid "You must be logged in to use the wishlist feature"
+msgstr ""
+
+#: woocommerce-wishlists.php:380
+msgid "Login or register"
+msgstr ""
+
+#: woocommerce-wishlists.php:426
+#: woocommerce-wishlists.php:2234
+msgid "Wishlists"
+msgstr ""
+
+#: woocommerce-wishlists.php:444
+msgid "Add Product to Existing Wishlist:"
+msgstr ""
+
+#: woocommerce-wishlists.php:494
+msgid "Add Product to New Wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:501
+msgid "Wishlist Title"
+msgstr ""
+
+#: woocommerce-wishlists.php:506
+msgid "Wishlist Type:"
+msgstr ""
+
+#: woocommerce-wishlists.php:524
+msgid "Submit"
+msgstr ""
+
+#: woocommerce-wishlists.php:560
+msgid "Adding the item to your wishlist failed."
+msgstr ""
+
+#: woocommerce-wishlists.php:584
+#: woocommerce-wishlists.php:592
+#: woocommerce-wishlists.php:632
+#: woocommerce-wishlists.php:657
+msgid "There was an error adding the wishlist. Please try again shortly."
+msgstr ""
+
+#: woocommerce-wishlists.php:598
+msgid "You must specify a Wishlist title."
+msgstr ""
+
+#: woocommerce-wishlists.php:643
+msgid ""
+"Your new wishlist was created.\n"
+"\n"
+msgstr ""
+
+#: woocommerce-wishlists.php:645
+msgid "The URL is :"
+msgstr ""
+
+#: woocommerce-wishlists.php:711
+msgid "The product was added to your wishlist!"
+msgstr ""
+
+#: woocommerce-wishlists.php:811
+msgid "Add to wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:816
+msgid "Item is in one or more your wishlists:"
+msgstr ""
+
+#: woocommerce-wishlists.php:871
+msgid "You have not created any wishlists yet"
+msgstr ""
+
+#: woocommerce-wishlists.php:894
+msgid "My Wishlists"
+msgstr ""
+
+#: woocommerce-wishlists.php:945
+msgid "Delete wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:957
+msgid "Save Wishlist Changes"
+msgstr ""
+
+#: woocommerce-wishlists.php:984
+msgid "You have"
+msgstr ""
+
+#: woocommerce-wishlists.php:991
+msgid "item"
+msgstr ""
+
+#: woocommerce-wishlists.php:993
+msgid "items"
+msgstr ""
+
+#: woocommerce-wishlists.php:997
+msgid "in your cart (indicated by an asterisk) from"
+msgstr ""
+
+#: woocommerce-wishlists.php:1002
+msgid "a wishlist."
+msgstr ""
+
+#: woocommerce-wishlists.php:1004
+msgid "wishlists."
+msgstr ""
+
+#: woocommerce-wishlists.php:1008
+msgid ""
+"If you don't want to buy these for those people then empty your cart and "
+"start again."
+msgstr ""
+
+#: woocommerce-wishlists.php:1012
+msgid ""
+"Otherwise the related wishlists will be updated to indicate the purchase "
+"when you checkout."
+msgstr ""
+
+#: woocommerce-wishlists.php:1077
+msgid "Wishlist Purchase Options"
+msgstr ""
+
+#: woocommerce-wishlists.php:1083
+msgid "Recipient Notification?"
+msgstr ""
+
+#: woocommerce-wishlists.php:1087
+msgid "Check this box to notify the recipient(s) of the wishlist item(s)"
+msgstr ""
+
+#: woocommerce-wishlists.php:1089
+msgid ""
+"Note that if you do not send a message the recipient will not see who bought "
+"this item when they view their wishlist."
+msgstr ""
+
+#: woocommerce-wishlists.php:1097
+msgid "Message to Recipient"
+msgstr ""
+
+#: woocommerce-wishlists.php:1101
+msgid ""
+"If you are buying wishlist items for multiple people the message below will "
+"be sent to each person!"
+msgstr ""
+
+#: woocommerce-wishlists.php:1119
+msgid ""
+"Error: You must enter a message to the recipient for the wishlist item(s) "
+"you are purchasing - or uncheck the Recipient Notification box."
+msgstr ""
+
+#: woocommerce-wishlists.php:1151
+msgid "You are not authorized to view this wishlist."
+msgstr ""
+
+#: woocommerce-wishlists.php:1172
+#: wishlists/single-wishlist-product.php:364
+msgid "There are no items in this wishlist."
+msgstr ""
+
+#: woocommerce-wishlists.php:1912
+msgid "List Owner Billing"
+msgstr ""
+
+#: woocommerce-wishlists.php:1913
+msgid "List Owner Shipping"
+msgstr ""
+
+#: woocommerce-wishlists.php:1953
+msgid "First Name"
+msgstr ""
+
+#: woocommerce-wishlists.php:1956
+msgid "Last Name"
+msgstr ""
+
+#: woocommerce-wishlists.php:1959
+#: woocommerce-wishlists.php:2621
+msgid "Company"
+msgstr ""
+
+#: woocommerce-wishlists.php:1962
+#: woocommerce-wishlists.php:2633
+msgid "Address 1"
+msgstr ""
+
+#: woocommerce-wishlists.php:1965
+#: woocommerce-wishlists.php:2637
+msgid "Address 2"
+msgstr ""
+
+#: woocommerce-wishlists.php:1968
+#: woocommerce-wishlists.php:2641
+msgid "City"
+msgstr ""
+
+#: woocommerce-wishlists.php:1971
+msgid "Postcode"
+msgstr ""
+
+#: woocommerce-wishlists.php:1974
+#: woocommerce-wishlists.php:2649
+msgid "Country"
+msgstr ""
+
+#: woocommerce-wishlists.php:1977
+msgid "State/County"
+msgstr ""
+
+#: woocommerce-wishlists.php:1980
+#: woocommerce-wishlists.php:2625
+msgid "Email"
+msgstr ""
+
+#: woocommerce-wishlists.php:1983
+#: woocommerce-wishlists.php:2629
+msgid "Phone"
+msgstr ""
+
+#: woocommerce-wishlists.php:2061
+msgid "Wishlist Item Purchased!"
+msgstr ""
+
+#: woocommerce-wishlists.php:2063
+#, php-format
+msgid "[%s] %s"
+msgstr ""
+
+#: woocommerce-wishlists.php:2227
+msgid "woocommerce"
+msgstr ""
+
+#: woocommerce-wishlists.php:2235
+msgid "Wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:2236
+msgid "Add Wishlist"
+msgstr "Add Registry"
+
+#: woocommerce-wishlists.php:2237
+msgid "Add New Wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:2238
+msgid "Edit"
+msgstr ""
+
+#: woocommerce-wishlists.php:2239
+msgid "Edit Wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:2240
+msgid "New Wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:2241
+msgid "View Wishlists"
+msgstr ""
+
+#: woocommerce-wishlists.php:2242
+msgid "View Wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:2243
+msgid "Search Wishlists"
+msgstr ""
+
+#: woocommerce-wishlists.php:2244
+msgid "No Wishlists found"
+msgstr ""
+
+#: woocommerce-wishlists.php:2245
+msgid "No Wishlists found in trash"
+msgstr ""
+
+#: woocommerce-wishlists.php:2246
+msgid "Parent Wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:2248
+msgid "This is where you can add new wishlists if you want to."
+msgstr ""
+
+#: woocommerce-wishlists.php:2267
+msgid "wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:2281
+#: woocommerce-wishlists.php:2283
+msgid "Wishlist Categories"
+msgstr ""
+
+#: woocommerce-wishlists.php:2284
+msgid "Wishlist Category"
+msgstr ""
+
+#: woocommerce-wishlists.php:2285
+msgid "Search Wishlist Categories"
+msgstr ""
+
+#: woocommerce-wishlists.php:2286
+msgid "All Wishlist Categories"
+msgstr ""
+
+#: woocommerce-wishlists.php:2287
+msgid "Parent Wishlist Category"
+msgstr ""
+
+#: woocommerce-wishlists.php:2288
+msgid "Parent Wishlist Category:"
+msgstr ""
+
+#: woocommerce-wishlists.php:2289
+msgid "Edit Wishlist Category"
+msgstr ""
+
+#: woocommerce-wishlists.php:2290
+msgid "Update Wishlist Category"
+msgstr ""
+
+#: woocommerce-wishlists.php:2291
+msgid "Add New Wishlist Category"
+msgstr ""
+
+#: woocommerce-wishlists.php:2292
+msgid "New Wishlist Category Name"
+msgstr ""
+
+#: woocommerce-wishlists.php:2312
+msgid "Anyone can search and/or view this wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:2313
+msgid "wishlist_public"
+msgstr ""
+
+#: woocommerce-wishlists.php:2326
+msgid "wishlist_private"
+msgstr ""
+
+#: woocommerce-wishlists.php:2339
+msgid "wishlist_shared"
+msgstr ""
+
+#: woocommerce-wishlists.php:2382
+msgid "ID"
+msgstr ""
+
+#: woocommerce-wishlists.php:2386
+msgid "Items"
+msgstr ""
+
+#: woocommerce-wishlists.php:2444
+msgid "Show All "
+msgstr ""
+
+#: woocommerce-wishlists.php:2491
+msgid "Owner Details"
+msgstr ""
+
+#: woocommerce-wishlists.php:2493
+msgid "List Items"
+msgstr ""
+
+#: woocommerce-wishlists.php:2539
+msgid "No customer selected"
+msgstr ""
+
+#: woocommerce-wishlists.php:2587
+msgid "List Owner:"
+msgstr ""
+
+#: woocommerce-wishlists.php:2597
+msgid "Guest"
+msgstr ""
+
+#: woocommerce-wishlists.php:2598
+msgid "Load billing address"
+msgstr ""
+
+#: woocommerce-wishlists.php:2606
+msgid "Guest Wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:2607
+msgid "Random ID"
+msgstr ""
+
+#: woocommerce-wishlists.php:2613
+msgid "First name"
+msgstr ""
+
+#: woocommerce-wishlists.php:2617
+msgid "Last name"
+msgstr ""
+
+#: woocommerce-wishlists.php:2645
+msgid "State"
+msgstr ""
+
+#: woocommerce-wishlists.php:2653
+msgid "Postal Code"
+msgstr ""
+
+#: woocommerce-wishlists.php:2686
+msgid "Img"
+msgstr ""
+
+#: woocommerce-wishlists.php:2687
+#: wishlists/single-wishlist-product.php:84
+msgid "Name"
+msgstr ""
+
+#: woocommerce-wishlists.php:2688
+#: wishlists/single-wishlist-product.php:85
+msgid "Price"
+msgstr ""
+
+#: woocommerce-wishlists.php:2689
+#: woocommerce-wishlists.php:2790
+#: wishlists/single-wishlist-product.php:86
+msgid "Qty"
+msgstr ""
+
+#: woocommerce-wishlists.php:2690
+msgid "Purchased for the list owner by (if applicable)"
+msgstr ""
+
+#: woocommerce-wishlists.php:2736
+msgid "Remove item"
+msgstr ""
+
+#: woocommerce-wishlists.php:2789
+#: wishlists/wishlist_email_template.php:38
+msgid "Buyer"
+msgstr ""
+
+#: woocommerce-wishlists.php:2819
+msgid "Add Products to List"
+msgstr ""
+
+#: woocommerce-wishlists.php:2819
+msgid "Add products to this wishlist"
+msgstr ""
+
+#: woocommerce-wishlists.php:2820
+msgid "Search for a product&hellip;"
+msgstr ""
+
+#: woocommerce-wishlists.php:2821
+msgid "Add products"
+msgstr ""
+
+#: woocommerce-wishlists.php:2827
+msgid "Remove this item? This cannot be undone after you save the post!"
+msgstr ""
+
+#: woocommerce-wishlists.php:3030
+msgid "Search"
+msgstr ""
+
+#: emails/wishlist_email_template.php:23
+msgid "Someone purchased an item from your wishlist!"
+msgstr ""
+
+#: emails/wishlist_email_template.php:27
+msgid "Item:"
+msgstr ""
+
+#: emails/wishlist_email_template.php:30
+msgid "Message from buyer:"
+msgstr ""
+
+#: ignitewoo_updater/ignitewoo_update_api.php:81
+msgid "Automatic update is not available for this plugin."
+msgstr ""
+
+#: ignitewoo_updater/ignitewoo_update_api.php:124
+msgid ""
+"There may be a new version of this plugin, but automatic update is "
+"unavailable."
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:17
+msgid ""
+"The item was added to your cart. Be sure to check the cart quantity before "
+"checkout."
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:45
+msgid "Wishlist updated"
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:63
+msgid "This wishlist is private."
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:237
+msgid "Purchased by: "
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:243
+msgid "by"
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:268
+msgid "by Anonymous"
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:285
+msgid "Remove item from wishlist"
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:285
+msgid "Remove"
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:307
+msgid "Buy this item for the wishlist owner."
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:307
+msgid "Buy some for"
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:315
+msgid "Already purchased"
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:334
+msgid "Update Wishlist"
+msgstr ""
+
+#: wishlists/single-wishlist-product.php:345
+msgid "Share this wishlist"
+msgstr ""
+
+#: wishlists/wishlist_email_template.php:28
+msgid "Someone purchased an item on your gift list!:"
+msgstr ""
+
+#: wishlists/wishlist_email_template.php:32
+msgid "Order #:"
+msgstr ""
+
+#: wishlists/wishlist_email_template.php:37
+msgid "Product Name"
+msgstr ""

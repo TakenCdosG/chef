@@ -1,0 +1,117 @@
+.chef-gift-registry form .form-group label{
+    min-width: 130px;
+    display: inline-block;
+    color: #000;
+}
+
+.chef-gift-registry form .form-group input[type=text], 
+.chef-gift-registry form .form-group input[type=tel], 
+.chef-gift-registry form .form-group input[type=password], 
+.chef-gift-registry form .form-group input[type="email"], 
+.chef-gift-registry form .form-group textarea {
+    border: 1px solid #1b1e1f;
+    width: 50%;
+    margin: 0 0 10px;
+    background-color: #f9f9f9;
+    border-radius: 0px;
+    padding: 3px 10px;
+}
+
+.chef-gift-registry form .form-actions .btn,
+.chef-gift-registry .btn{
+    border-width: 0;
+    padding: 7px 14px;
+    font-size: 14px;
+    outline: none !important;
+    background-image: none !important;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    text-shadow: none;
+    color: #FFFFFF;
+    background-color: #ef3d42;
+    cursor: pointer;
+}
+
+.chef-gift-registry .options-link{
+    position: relative;
+    margin-top: -15px;
+    margin-bottom: 20px;
+}
+
+.wishlists-result .btn{
+    border-width: 0;
+    padding: 5px 12px;
+    font-size: 14px;
+    outline: none !important;
+    background-image: none !important;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    text-shadow: none;
+    color: #333333;
+    background-color: #E5E5E5;
+    margin: 10px auto;
+    cursor: pointer;
+}
+
+.ui-datepicker{
+    z-index: 99999!important;
+}
+
+#wishlist_new_li {
+    background-color: #f7f7f7!important;
+    padding: 5px!important; 
+    margin: 0px!important; 
+}
+
+#wishslist_entry_form ul {
+    margin-top: 0px!important;
+    padding: 0px!important;
+}
+
+#wishslist_entry_form .form-group-event-type {
+    margin-top: 20px!important;
+    margin-bottom: 12px!important;
+}
+
+.wishlist_h3_title{
+  color: #ef3d42;
+}
+
+.note {
+    border-left: 5px solid #eee;
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+    -ms-border-radius: 0 4px 4px 0;
+    -o-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+    margin: 0 0 0px 0;
+    padding: 15px 30px 15px 15px;
+    border-left: 5px solid #eee;
+    background-color: #eef7ea;
+    border-color: #3cc051;    
+}
+
+.note a{
+    color: #ef3d42;
+}
+
+.btn.default:hover,
+.btn.default:active{
+  background-color: #ca2e33!important;
+}
+
+
+#wishslist_entry_form #wishlist_new_li label.error{
+    color: #d84a38!important; 
+    font-size: 12px!important; 
+    margin: 5px 0px 0px 0px!important; 
+    padding: 0px!important; 
+}
+
+#wishslist_entry_form #wishlist_title_field {
+    margin-bottom: 2px!important; 
+}
