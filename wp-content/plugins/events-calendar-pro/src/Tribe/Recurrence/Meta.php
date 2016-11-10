@@ -894,8 +894,21 @@ class Tribe__Events__Pro__Recurrence__Meta {
 		global $wpdb;
 		$ancestors = get_post_ancestors( $post_id );
 		$post_id   = empty( $ancestors ) ? $post_id : end( $ancestors );
-		$sql       = "SELECT meta_value FROM {$wpdb->postmeta} m INNER JOIN {$wpdb->posts} p ON p.ID=m.post_id AND (p.post_parent=%d OR p.ID=%d) WHERE meta_key='_EventStartDate' ORDER BY meta_value ASC";
-		$sql       = $wpdb->prepare( $sql, $post_id, $post_id );
+
+		$sql       = "
+			SELECT     meta_value
+			FROM       {$wpdb->postmeta} m
+			INNER JOIN {$wpdb->posts} p ON p.ID=m.post_id 
+			           AND ( p.post_parent=%d OR p.ID=%d )
+		
+			WHERE meta_key = '_EventStartDate' 
+			      AND post_type = %s 
+			      AND post_status NOT IN ( 'inherit', 'auto-draft', 'trash' )
+			
+			ORDER BY meta_value ASC
+		";
+
+		$sql       = $wpdb->prepare( $sql, $post_id, $post_id, Tribe__Events__Main::POSTTYPE );
 		$result    = $wpdb->get_col( $sql );
 		$cache->set( 'recurrence_start_dates_' . $post_id, $result, Tribe__Cache::NO_EXPIRATION, 'save_post' );
 

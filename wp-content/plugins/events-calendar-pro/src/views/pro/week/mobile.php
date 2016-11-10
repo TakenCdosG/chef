@@ -3,6 +3,7 @@
 /**
  *
  * Please see single-event.php in this directory for detailed instructions on how to use and modify these templates.
+ * @version 4.3.2
  *
  */
 
@@ -18,7 +19,9 @@
 			<div class="tribe-event-schedule-details">
 				<span class="tribe-event-date-start">[[=dateDisplay]] </span>
 			</div>
-			<a href="[[=permalink]]" class="tribe-events-read-more" rel="bookmark">Find out more »</a>
+			<a href="[[=permalink]]" class="tribe-events-read-more" rel="bookmark">
+				<?php esc_html_e( 'Find out more', 'tribe-events-calendar-pro' ); ?> »
+            </a>
 		</div>
 	</div>
 </script>

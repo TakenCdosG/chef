@@ -50,7 +50,7 @@
 			public $shortcodes;
 
 			const REQUIRED_TEC_VERSION = '4.3';
-			const VERSION = '4.3';
+			const VERSION = '4.3.2';
 
 
 			private function __construct() {
@@ -115,35 +115,17 @@
 				add_filter( 'tribe_events_title_tag', array( $this, 'maybeAddEventTitle' ), 10, 3 );
 
 				add_filter( 'tribe_help_tab_forums_url', array( $this, 'helpTabForumsLink' ) );
-				add_action( 'plugin_action_links_' . plugin_basename( __FILE__ ), array(
-					$this,
-					'addLinksToPluginActions',
-				) );
+				add_action( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'addLinksToPluginActions' ) );
 
 				add_filter( 'tribe_events_before_html', array( $this, 'events_before_html' ), 10 );
 
 				// add custom fields to "the_meta" on single event template
-				add_filter( 'tribe_events_single_event_the_meta_addon', array(
-					$this,
-					'single_event_the_meta_addon',
-				), 10, 2 );
-				add_filter( 'tribe_events_single_event_meta_group_template_keys', array(
-					$this,
-					'single_event_meta_group_template_keys',
-				), 10 );
-				add_filter( 'tribe_events_single_event_meta_template_keys', array(
-					$this,
-					'single_event_meta_template_keys',
-				), 10 );
+				add_filter( 'tribe_events_single_event_the_meta_addon', array( $this, 'single_event_the_meta_addon' ), 10, 2 );
+				add_filter( 'tribe_events_single_event_meta_group_template_keys', array( $this, 'single_event_meta_group_template_keys' ), 10 );
+				add_filter( 'tribe_events_single_event_meta_template_keys', array( $this, 'single_event_meta_template_keys' ), 10 );
 				add_filter( 'tribe_event_meta_venue_name', array( 'Tribe__Events__Pro__Single_Event_Meta', 'venue_name' ), 10, 2 );
-				add_filter( 'tribe_event_meta_organizer_name', array(
-					'Tribe__Events__Pro__Single_Event_Meta',
-					'organizer_name',
-				), 10, 2 );
-				add_filter( 'tribe_events_single_event_the_meta_group_venue', array(
-					$this,
-					'single_event_the_meta_group_venue',
-				), 10, 2 );
+				add_filter( 'tribe_event_meta_organizer_name', array( 'Tribe__Events__Pro__Single_Event_Meta', 'organizer_name' ), 10, 2 );
+				add_filter( 'tribe_events_single_event_the_meta_group_venue', array( $this, 'single_event_the_meta_group_venue' ), 10, 2 );
 
 				$this->enable_recurring_info_tooltip();
 				add_action( 'tribe_events_before_the_grid', array( $this, 'disable_recurring_info_tooltip' ), 10, 0 );
@@ -173,10 +155,7 @@
 				add_filter( 'template_redirect', array( $this, 'filter_canonical_link_on_recurring_events' ), 10, 1 );
 
 				$this->permalink_editor = apply_filters( 'tribe_events_permalink_editor', new Tribe__Events__Pro__Recurrence__Permalinks() );
-				add_filter( 'post_type_link', array(
-					$this->permalink_editor,
-					'filter_recurring_event_permalinks',
-				), 10, 4 );
+				add_filter( 'post_type_link', array( $this->permalink_editor, 'filter_recurring_event_permalinks' ), 10, 4 );
 				add_filter( 'get_sample_permalink', array( $this->permalink_editor, 'filter_sample_permalink' ), 10, 2 );
 
 				add_filter( 'tribe_events_register_venue_type_args', array( $this, 'addSupportsThumbnail' ), 10, 1 );
@@ -201,9 +180,61 @@
 				add_filter( 'oembed_request_post_id', array( $this, 'oembed_request_post_id_for_recurring_events' ), 10, 2 );
 
 				add_action( 'plugins_loaded', array( 'Tribe__Events__Pro__Admin__Settings', 'hook' ) );
+				add_action( 'admin_enqueue_scripts', array( $this, 'load_widget_assets' ) );
+				add_action( 'wp_ajax_tribe_widget_dropdown_terms', array( $this, 'ajax_widget_get_terms' ) );
 
 				// Start the integrations manager
 				Tribe__Events__Pro__Integrations__Manager::instance()->load_integrations();
+			}
+
+			/**
+			 * Registers this plugin as being active for other tribe plugins and extensions
+			 *
+			 * @return bool Indicates if Tribe Common wants the plugin to run
+			 */
+			public function register_active_plugin() {
+				if ( ! function_exists( 'tribe_register_plugin' ) ) {
+					return true;
+				}
+				return tribe_register_plugin( EVENTS_CALENDAR_PRO_FILE, __CLASS__, self::VERSION );
+			}
+
+			/**
+			 * AJAX handler for the Widget Term Select2
+			 * @return void
+			 */
+			public function ajax_widget_get_terms() {
+				$disabled = $_POST['disabled'];
+
+				$taxonomies = get_object_taxonomies( Tribe__Events__Main::POSTTYPE, 'objects' );
+				$taxonomies = array_reverse( $taxonomies );
+
+				$results = array();
+				foreach ( $taxonomies as $tax ) {
+					$group = array(
+						'text' => esc_attr( $tax->labels->name ),
+						'children' => array(),
+					);
+
+					// echo sprintf( "<optgroup id='%s' label='%s'>", esc_attr( $tax->name ), esc_attr( $tax->labels->name ) );
+					$terms = get_terms( $tax->name, array( 'hide_empty' => false ) );
+					if ( empty( $terms ) ) {
+						continue;
+					}
+
+					foreach ( $terms as $term ) {
+						$group['children'][] = array(
+							'id' => esc_attr( $term->term_id ),
+							'text' => esc_html( $term->name ),
+							'taxonomy' => $tax,
+							'disabled' => in_array( $term->term_id, $disabled ),
+						);
+					}
+
+					$results[] = $group;
+				}
+
+				wp_send_json_success( array( 'results' => $results ) );
 			}
 
 			/**
@@ -1066,7 +1097,7 @@
 				}
 
 				// photo view
-				if ( tribe_is_photo() ){
+				if ( tribe_is_photo() ) {
 					$template = Tribe__Events__Templates::getTemplateHierarchy( 'pro/photo' );
 				}
 
@@ -1190,6 +1221,15 @@
 					'recurrence' => Tribe__Events__Pro__Recurrence__Strings::recurrence_strings(),
 					'exclusion' => array(),
 				) );
+			}
+
+			public function load_widget_assets( $hook = null ) {
+				if ( 'widgets.php' !== $hook ) {
+					return;
+				}
+
+				Tribe__Events__Template_Factory::asset_package( 'select2' );
+				wp_enqueue_script( 'tribe-admin-widget', tribe_events_pro_resource_url( 'admin-widget.js' ), array( 'jquery' ), apply_filters( 'tribe_events_pro_js_version', self::VERSION ) );
 			}
 
 			public function admin_enqueue_styles() {

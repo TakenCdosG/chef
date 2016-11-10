@@ -254,7 +254,7 @@
             .date-line {margin-left:2px;width:60%;} 
             .scheduling-group {width: auto; margin-right:0px;}
             #deal_schedule_comment {margin-top: 22px;margin-left: 0px;} /*v1.1.0.8*/
-            #wizard-select-area {float: left; width: auto;margin-left: 20px;}
+            #wizard-select-area, #apply-to-cheapest-select-area  {float: left; width: auto;margin-left: 20px;}
             #wizard-on-off-sw-select {margin-top:-2px;font-weight: normal;}
             .scheduling-label {margin-bottom:-5px;}
             .begin-date, .end-date {color:#517E99;} 

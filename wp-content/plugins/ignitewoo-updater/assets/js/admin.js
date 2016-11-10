@@ -12,12 +12,21 @@ jQuery( document ).ready(function( $ ) {
 			$( 'div.error.fade' ).remove();
 			$( '#activate-products table.licenses' ).css({ opacity: 0.2 });
 			$( '#activate-products' ).attr( 'disabled','disabled' );
+			$( 'table.dashboard_page_ignition-helper' ).fadeTo( '400', '0.6' ).block({
+				message: null,
+				overlayCSS: {
+					background: '#fff url(' + ignition_helper.spinner + ') no-repeat center', backgroundSize: '16px 16px',
+					opacity: 0.8
+				}
+			});
+		
 			var submit_data = {
 				action: 'ignition_activate_license_keys',
 				license_data: license_keys_object,
 				security: WTHelper.activate_license_nonce
 			};
 			$.post( WTHelper.ajax_url, submit_data, function( data ) {
+				$( 'table.dashboard_page_ignition-helper' ).unblock().fadeTo( '300', '1' );
 				var json_data = $.parseJSON( data );
 				// Check if activation was successfull and reload page to show new activation
 				if ( 'true' == json_data.success ) {
@@ -30,7 +39,8 @@ jQuery( document ).ready(function( $ ) {
 				$( '#activate-products' ).removeAttr( 'disabled' );
 				$('html, body').animate({
 					scrollTop: $( '.ignition-updater-wrap .nav-tab-wrapper' ).offset().top
-				}, 2000);
+				}, 1000);
+
 			});
 		}
 		event.preventDefault();

@@ -3,8 +3,8 @@ Contributors: vark
 Donate link: https://www.varktech.com/woocommerce/woocommerce-dynamic-pricing-discounts-pro/
 Tags: dynamic pricing,  WooCommerce, ecommerce, e commerce, e-commerce, commerce, store, sales, promotion, advertising, sell, shop, shopping, cart, checkout, configurable, variable, widgets, reports, marketing, deals, price, discount, group pricing, wholesale, membership, role, promotion, bogo, catalog only
 Requires at least: 3.3
-Tested up to: 4.5.2
-Stable tag: 1.1.6.6
+Tested up to: 4.6
+Stable tag: 1.1.6.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -193,6 +193,13 @@ Direct support requests can be made here on the support tab, or at the [Support]
 
 
 == Changelog ==
+
+= 1.1.6.7 - 2016-07-18 =
+* Enhancement - Improved "Cheapest" Deals: 
+		Cheapest option now in the Rule's Blueprint area - **please hover** to read the how-to.
+* Enhancement - Pro plugin custom "update available" messaging now included on the plugins page, 
+		just under the listing forPricing Deals Pro.
+* Enhancement - Only check for Pro plugin update if required.
 
 = 1.1.6.6 - 2016-07-09 =
 SVN Update issue, final resolution!

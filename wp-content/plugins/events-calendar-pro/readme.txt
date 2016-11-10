@@ -5,7 +5,7 @@ Tags: events, calendar, event, venue, organizer, dates, date, google maps, confe
 Donate link: http://m.tri.be/29
 Requires at least: 3.9
 Tested up to: 4.6.1
-Stable tag: 4.3
+Stable tag: 4.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -202,6 +202,27 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.3.2] 2016-11-02 =
+
+* Fix - Prevent notices on wp-login.php page from Customizer Code
+* Fix - Now Tooltip are showing on Week view for Shortcode (thanks to @jacob for this report)[68094]
+* Fix - Make the "Find out more" string in the week mobile view translatable (thanks @saloni for highlighting this in our forums) [67322]
+* Fix - Changes to ensure valid HTML is output from the single venue page (Thanks @Reinhard!)[68440]
+
+= [4.3.1.1] 2016-10-21 =
+
+* Fix - Resolved a Fatal using function return value in write context (5.2 compatibility) [68387]
+
+= [4.3.1] 2016-10-20 =
+
+* Fix - Pagination links on Week view are updating correctly [67977]
+* Tweak - Only load This Week Widget Resources when the widget or shortcode is on a page (props to @stratejusinc) [63921]
+* Tweak - Added AJAX on Select2 for Widgets, improving performance. [66130]
+* Tweak - Added plugin file path constant.
+* Tweak - Registered plugin as active with Tribe Common. [66657]
+* Fix - Allow pagination and control over the posts per page on the single venue view (thanks to @R for reporting this one) [62857]
+* Tweak - Open recurrence exclusion rules by default on reload of admin[64289]
 
 = [4.3] 2016-10-13 =
 

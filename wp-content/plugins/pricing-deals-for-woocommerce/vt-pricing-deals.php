@@ -3,7 +3,7 @@
 Plugin Name: VarkTech Pricing Deals for WooCommerce
 Plugin URI: http://varktech.com
 Description: An e-commerce add-on for WooCommerce, supplying Pricing Deals functionality.
-Version: 1.1.6.6
+Version: 1.1.6.7
 Author: Vark
 Author URI: http://varktech.com
 */
@@ -50,9 +50,11 @@ class VTPRD_Controller{
       header("Pragma: no-cache");
     } 
 
-		define('VTPRD_VERSION',                               '1.1.6.6');
-    define('VTPRD_MINIMUM_PRO_VERSION',                   '1.1.6.3'); /* as of Pro 1.1.6.3, still leave this at 1.1.1.2!!*/
-    define('VTPRD_LAST_UPDATE_DATE',                      '2016-07-09');
+  /* v1.1.6.6  had svn issues with v1.1.6.3-4. then small bug in plugin mismatch logic, immediate update to v1.1.6.6*/
+
+		define('VTPRD_VERSION',                               '1.1.6.7');
+    define('VTPRD_MINIMUM_PRO_VERSION',                   '1.1.6.7'); 
+    define('VTPRD_LAST_UPDATE_DATE',                      '2016-07-18');
     define('VTPRD_DIRNAME',                               ( dirname( __FILE__ ) ));
     define('VTPRD_URL',                                   plugins_url( '', __FILE__ ) );
     define('VTPRD_EARLIEST_ALLOWED_WP_VERSION',           '3.3');   //To pick up wp_get_object_terms fix, which is required for vtprd-parent-functions.php
@@ -62,7 +64,7 @@ class VTPRD_Controller{
     define('VTPRD_PRO_PLUGIN_FOLDER',                    'pricing-deals-pro-for-woocommerce');    //v1.1.5
     define('VTPRD_PRO_PLUGIN_FILE',                      'vt-pricing-deals-pro.php');    //v1.1.5    
     
-    define('VTPRD_PRO_PLUGIN_NAME',                      'Varktech Pricing Deals Pro for WooCommerce');    //v1.0.7.1
+    define('VTPRD_PRO_PLUGIN_NAME',                      'Varktech Pricing Deals PRO for WooCommerce');    //v1.0.7.1
 
     define('VTPRD_ADMIN_CSS_FILE_VERSION',                'v003'); //V1.1.0.8 ==> use to FORCE pickup of new CSS
     define('VTPRD_ADMIN_JS_FILE_VERSION',                 'v003'); //V1.1.0.8   ==> use to FORCE pickup of new JS
@@ -918,6 +920,7 @@ NOW DO IN A CRON JOB
    //**************************** 
    //v1.1.5 refactored
    //v1.1.6.3  Refactored to be a SIMPLER Message, except on rego screen
+   //v1.1.6.7  Refactored (again!)
    //****************************                       
    public function vtprd_admin_notice_version_mismatch_pro() {
   
@@ -928,61 +931,44 @@ NOW DO IN A CRON JOB
       $pageURL = $_SERVER["REQUEST_URI"];      
 
       switch( true ) { 
+        case (strpos($pageURL,'delete-selected') !== false ):         
+                return; //annoying to have warnings on the delete page!
+             break;
+          
         case (strpos($pageURL,'vtprd_license_options_page') !== false ):         
-            //FULL message for rego screen
-            $message  =  '<strong>' . __('Please update the PRO plugin: ' , 'vtprd') . ' &nbsp;&nbsp;'  .VTPRD_PRO_PLUGIN_NAME . '</strong>' ;
-            $message .=  '<br>&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('Your Pro Version = ' , 'vtprd') .$vtprd_license_options['pro_version'] .'&nbsp;&nbsp;<strong>' . __(' The current required Pro Version = ' , 'vtprd') .VTPRD_MINIMUM_PRO_VERSION .'</strong>'; 
-            
-            $message .=  '<br><br><strong>' . 'The PRO Plugin:' . ' &nbsp;&nbsp;</strong><em>'  .VTPRD_PRO_PLUGIN_NAME . '</em>&nbsp;&nbsp;<strong>' . ' ** will not give discounts ** until this is resolved.' .'</strong>' ;              
-            
-            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;<strong>**&nbsp;&nbsp; Please ;&nbsp;<em>update and activate your PRO plugin!</em> &nbsp;&nbsp;**</strong>' ;  
-            
-            $message .=  '<br><br>&nbsp;&nbsp; 1. &nbsp;&nbsp;<strong><em>' . __('IF your PRO plugin is currently registered, '  , 'vtprd').'</em>';
-            $message .=  '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . __('You should see an update prompt on your '  , 'vtprd');
-            $message .=     '<a class="ab-item" href="'.$vtprd_license_options['home_url'].'/wp-admin/plugins.php?plugin_status=all&paged=1&s">' . __('Plugins Page', 'vtprd') . '</a>';
-            $message .=     __(' for a PRO Plugin automated update'  , 'vtprd') .'</strong>';
-            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('If no Pro Plugin update nag is visible, you can request Wordpress to check for an update: '  , 'vtprd');
-            $message .=  '<a href="'.$vtprd_license_options['home_url'].'/wp-admin/edit.php?post_type=vtprd-rule&page=vtprd_license_options_page&action=force_plugin_updates_check">' . __('Check for Plugin Updates', 'vtprd'). '</a>';
-            $message .=  '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('Then return to your '  , 'vtprd');
-            $message .=     '<a class="ab-item" href="'.$vtprd_license_options['home_url'].'/wp-admin/plugins.php?plugin_status=all&paged=1&s">' . __('Plugins Page', 'vtprd') . '</a>';
-            $message .=     __(' to apply the PRO Plugin automated update'  , 'vtprd') .'</strong>';
-            
-                 
-            $message .=  '<br><br>&nbsp;&nbsp; 2. &nbsp;&nbsp;' . __('If no automated update is available, please update in the following manner'  , 'vtprd');
-            $message .=  '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('Use the login credentials emailed to you at purchase time, and'  , 'vtprd');
-            $message .=  '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('Go to Varktech.com page ', 'vtprd');
-            $message .=  '<a target="_blank" href="https://www.varktech.com/your-account/your-login/">Your Login</a>';
-            $message .=   __(', and log into your account.', 'vtprd');
-            $message .=  '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . __('(your Login Username = your purchasing email address)', 'vtprd');
-            $message .=  '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('Download the current version of the Pro Plugin from Varktech.com. ', 'vtprd');
-            $message .=  '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('Delete the old version of the Pro Plugin on your Plugins Page (no settings will be lost). ', 'vtprd');
-            $message .=  '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;<strong>' . __('<em>Install and Activate</em> the Updated Pro Plugin on your Plugins Page. ', 'vtprd') .'</strong>';
-            $message .=  '</strong>';
-            $message .=  "<span style='color:grey !important;'><br><br><em>&nbsp;&nbsp;&nbsp; (This message displays when the Pro version is installed, regardless of whether it's active)</em></span>" ;
-          break;
+                //v1.1.6.7  NOW handled in vtprd-license-options as a direct message, as admin-notices are sometimes blocked by a conflicting plugin!! 
+                return;
+             break;
           
         case (strpos($pageURL,'update-core') !== false ):
             $message  =   VTPRD_PRO_PLUGIN_NAME;
             
-            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;<strong>' . __('Now go back to your '  , 'vtprd').'&nbsp;&nbsp;';
-            $message .=     '<a class="ab-item" href="'.$vtprd_license_options['home_url'].'/wp-admin/plugins.php?plugin_status=all&paged=1&s">' . __('Plugins Page', 'vtprd') . '</a>'.'&nbsp;&nbsp;' . '</strong>' ;          
-            $message .=   __('and look for the plugin update notification. ' , 'vtprd');
+            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong> *** &nbsp;&nbsp;' . __(' Now CLICK HERE: '  , 'vtprd').'&nbsp;&nbsp;';
+            $message .=     '<a style="text-decoration: underline;font-size:16px;" class="ab-item" href="'.$vtprd_license_options['home_url'].'/wp-admin/plugins.php?plugin_status=all&paged=1&s">' . __('GO BACK to Plugins Page', 'vtprd') . '</a>'.'&nbsp;&nbsp;&nbsp; ***' . '</strong>' ;          
+            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . __('and look for the plugin update notification. ' , 'vtprd');
           break;
         
         default:          
-            $message  =  '<strong>' . __('Please update the PRO plugin: ' , 'vtprd') . ' &nbsp;&nbsp;'  .VTPRD_PRO_PLUGIN_NAME . '</strong>' ;
+            //v1.1.6.7  message reworded
+            $message  =  '<strong>' . __('Update Required for: ' , 'vtprd') . ' &nbsp;&nbsp;'  .VTPRD_PRO_PLUGIN_NAME . '</strong>' ;
+            $message .=  "<span style='color:grey !important;'><em>&nbsp;&nbsp;&nbsp; (pro plugin will not discount until updated)</em></span>" ;
             
-            $message .=  '<br><br>&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('Your Pro Version = ' , 'vtprd') .$vtprd_license_options['pro_version'] .'&nbsp;&nbsp;<strong>' . __(' The current <em>required</em> Pro Version = ' , 'vtprd') .VTPRD_MINIMUM_PRO_VERSION .'</strong>'; 
+            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . __('Your Pro Version = ' , 'vtprd') .$vtprd_license_options['pro_version'] .'&nbsp;&nbsp;&nbsp;&nbsp;<strong>' . __(' <em>Required</em> Pro Version = ' , 'vtprd') .VTPRD_MINIMUM_PRO_VERSION .'</strong>'; 
     
             if (strpos($pageURL,'plugins.php') !== false ) {
-              $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;<em>' . __('Check for a plugin update reminder (nag) </em><strong>&nbsp;&nbsp; in the plugin list below! </strong>'  , 'vtprd');
+              //$message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;<em>' . __('Check for a plugin update reminder (nag) </em><strong>&nbsp;&nbsp; in the plugin list below! </strong>'  , 'vtprd');
+              $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('If no "update now" below, &nbsp;&nbsp; CLICK HERE: '  , 'vtprd') .'&nbsp;&nbsp;';
+            } else {
+              $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . __('CLICK HERE: '  , 'vtprd') .'&nbsp;&nbsp;';
             }
-    
-            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('Otherwise, CLICK HERE: '  , 'vtprd') .'&nbsp;&nbsp;';
-            $message .=  '<a href="'.$vtprd_license_options['home_url'].'/wp-admin/edit.php?post_type=vtprd-rule&page=vtprd_license_options_page&action=force_plugin_updates_check"><strong>' . __('Check for Plugin Updates', 'vtprd'). '</strong></a>';          
+                            
+            //$message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('Otherwise, CLICK HERE: '  , 'vtprd') .'&nbsp;&nbsp;';
+            $message .=  '<a style="text-decoration: underline;font-size:16px;"  href="'.$vtprd_license_options['home_url'].'/wp-admin/edit.php?post_type=vtprd-rule&page=vtprd_license_options_page&action=force_plugin_updates_check"><strong>' . __('Check for Plugin Updates', 'vtprd'). '</strong></a>';          
           
-            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('If still no update nag, go to the '  , 'vtprd') .'&nbsp;&nbsp;';
-            $message .=  '<a href="'.$vtprd_license_options['home_url'].'/wp-admin/edit.php?post_type=vtprd-rule&page=vtprd_license_options_page">Register Pro License Page</a>' ; 
+            if (strpos($pageURL,'plugins.php') !== false ) {
+              $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('If still no "update now", &nbsp; go to the '  , 'vtprd') .'&nbsp;&nbsp;';
+              $message .=  '<a href="'.$vtprd_license_options['home_url'].'/wp-admin/edit.php?post_type=vtprd-rule&page=vtprd_license_options_page">Register Pro License Page</a>' ; 
+            }
           break;      
       }
       
@@ -992,6 +978,50 @@ NOW DO IN A CRON JOB
       echo $admin_notices;
       return;    
   }   
+
+   //**************************** 
+   //v1.1.6.7 New Function
+   // if pro installed test done before this action is loaded...
+   //****************************       
+    function vtprd_plugin_notice_version_mismatch_pro( $plugin_file, $plugin_data, $status ) {
+       global $vtprd_license_options;
+       if (!$vtprd_license_options) {
+          $vtprd_license_options = get_option( 'vtprd_license_options' ); 
+       } 
+
+       if ( ($vtprd_license_options['pro_plugin_version_status'] == 'Pro Version Error') &&  
+          //  (strpos( $plugin_file, 'pricing-deals-for-woocommerce' ) !== false )  ) {
+            (strpos( $plugin_file, VTPRD_PRO_PLUGIN_FOLDER ) !== false )  ) {
+   
+            if ( (isset($plugin_data['url'])) && 
+                 (isset($plugin_data['package'])) &&
+                 ($plugin_data['url'] !== false) &&
+                 ($plugin_data['package'] !== false) ) {              
+              //**************************************************************************
+              //if update nag data is found, message unneccessary, 
+              //   and actually gums up the works, so don't send!
+              //**************************************************************************
+              return;                    
+            }
+         
+            $message  =  '<td colspan="5" class="update-msg" style="line-height:1.2em; font-size:12px; padding:1px;">';
+            $message .=  '<div style="color:#000; font-weight:bold; margin:4px 4px 4px 5%; width:80%; padding:6px 5px; background-color:#fffbe4; border-color:#dfdfdf; border-width:1px; border-style:solid; -moz-border-radius:5px; -khtml-border-radius:5px; -webkit-border-radius:5px; border-radius:5px;">';
+            $message .=  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . __('Get the New version ', 'vtprd') .'&nbsp; - &nbsp;&nbsp;<em>'. VTPRD_MINIMUM_PRO_VERSION .'</em>&nbsp;&nbsp; - &nbsp;'. __(' *required* &nbsp;&nbsp; for ', 'vtprd')  .'&nbsp;&nbsp;' . VTPRD_PRO_PLUGIN_NAME  ;
+            $message .=  "&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:grey !important;'><em>&nbsp;&nbsp;&nbsp; (pro plugin will not discount until updated)</em></span>" ;
+            //$message .=  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' .VTPRD_PRO_PLUGIN_NAME  .'&nbsp;&nbsp;&nbsp;&nbsp;' . __('New version ', 'vtprd') .'&nbsp;&nbsp;<em>'. VTPRD_MINIMUM_PRO_VERSION .'</em>&nbsp;&nbsp;'. __(' *required* ! ', 'vtprd')   ;
+                  
+            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('To fetch the update, CLICK HERE: '  , 'vtprd') .'&nbsp;&nbsp;';
+            $message .=  '<a style="text-decoration: underline;font-size:14px;" href="'.$vtprd_license_options['home_url'].'/wp-admin/edit.php?post_type=vtprd-rule&page=vtprd_license_options_page&action=force_plugin_updates_check"><strong>' . __('Check for Plugin Updates', 'vtprd'). '</strong></a>';          
+          
+            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;' . __('If still no update available, go to the '  , 'vtprd') .'&nbsp;&nbsp;';
+            $message .=  '<a href="'.$vtprd_license_options['home_url'].'/wp-admin/edit.php?post_type=vtprd-rule&page=vtprd_license_options_page">Register Pro License Page</a>' ; 
+            
+            $message .=  '</div	></td>';            
+            echo $message;
+      }
+      
+      return;
+    }
   
    //**************************** 
    //v1.1.5 refactored
@@ -1098,7 +1128,7 @@ NOW DO IN A CRON JOB
             $message .=  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . 'Your system memory is currently &nbsp;' .  size_format( $memory ) ;
             
             $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . '- In wp-admin, please go to Woocommerce/System Status and look for WP Memory Limit.  ' ;
-            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . '- *** Suggest that you increase memory to a 256mb *** (the new defacto standard...)  ' ;
+            $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . '- *** Suggest that you increase memory to 256mb *** (the new defacto standard...)  ' ;
             $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . '-  First, --contact your Host-- and request the memory change (this should be FREE from your Host).  ' ;
             $message .=  '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . '-  Then you need to update your wordpress wp_config.php file. See: <a href="http://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP">Increasing memory allocated to PHP</a>   ' ;
     
@@ -2076,7 +2106,7 @@ error_log( print_r(  '$pagenow =  ' .$pagenow , true ) );
         }
 
       } 
-    
+
       if ($vtprd_license_options['pro_version'] > '') {
        
     //error_log( print_r(  'vtprd_pro_version_verify 006' , true ) );      
@@ -2087,7 +2117,14 @@ error_log( print_r(  '$pagenow =  ' .$pagenow , true ) );
           //$vtprd_license_options['state']  = 'pending';  //v1.1.6.3 changed from PRO deactivation to status change
           //$vtprd_license_options['status'] = 'invalid';  //v1.1.6.3 changed from PRO deactivation to status change
         } else {
-         
+       
+          //v1.1.6.7 begin
+          // if previously pro version error, this would have been set, to allow a PLUGIN UPDATE.  Update has been completed, so no longer necessary!
+          if ($vtprd_license_options['pro_plugin_version_status'] == 'Pro Version Error') {
+            delete_option('vtprd_do_pro_plugin_update');  
+          }
+          //v1.1.6.7 begin
+            
     //error_log( print_r(  'vtprd_pro_version_verify 008' , true ) );      
           $vtprd_license_options['pro_plugin_version_status'] = 'valid'; 
         }
@@ -2165,14 +2202,24 @@ error_log( print_r(  '$pagenow =  ' .$pagenow , true ) );
 
    
     if ($vtprd_license_options['pro_plugin_version_status'] == 'Pro Version Error') {
-      //v1.1.6.3 begin
+      //*******************
+      //v1.1.6.7 refactored
       //ONLY show if the plugin is actually INSTALLED!!
-      $pro_plugin_is_installed = $this->vtprd_maybe_pro_plugin_installed(); // function pro_plugin_installed must be in the class!!
+      if (defined('VTPRD_PRO_VERSION')) {
+        $pro_plugin_is_installed = TRUE;
+      } else {
+        $pro_plugin_is_installed = $this->vtprd_maybe_pro_plugin_installed(); // function pro_plugin_installed must be in the class!!
+      }     
       if ($pro_plugin_is_installed !== false) {
-        add_action( 'admin_notices',array(&$this, 'vtprd_admin_notice_version_mismatch_pro') );  
-      }
-      //v1.1.6.3 end       
+        add_action( 'admin_notices',    array(&$this, 'vtprd_admin_notice_version_mismatch_pro') ); 
+        add_action( 'after_plugin_row', array(&$this, 'vtprd_plugin_notice_version_mismatch_pro' ), 10, 3  );  //v1.1.6.7
+         //v1.1.6.7 - plugin updater now runs *only* when a plugin mismatch is detected in the free version - so there must always be paired updates!! 
+        update_option('vtprd_do_pro_plugin_update', TRUE);  //v1.1.6.7 ==>> allows pro_plugin_update action!
+      //v1.1.6.7 end 
+      //******************* 
+      }     
     }
+    
     if ($vtprd_license_options['pro_plugin_version_status'] == 'Free Version Error') {
       //v1.1.6.3 begin
       //ONLY show if the plugin is actually INSTALLED!!
@@ -2213,7 +2260,7 @@ error_log( print_r(  '$pagenow =  ' .$pagenow , true ) );
     }
    
     //if fatal counts exceed limit, never allow pro plugin to be activated
-    if ($vtprd_license_count >= 5 ) { 
+    if ($vtprd_license_count >= 10 ) { //v1.1.6.7 upgraded from 5 to 10!
       vtprd_deactivate_pro_plugin();
       $vtprd_license_options['state'] = 'suspended-by-vendor';
       $vtprd_license_options['status'] = 'invalid';

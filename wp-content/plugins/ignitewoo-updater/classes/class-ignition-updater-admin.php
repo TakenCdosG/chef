@@ -373,9 +373,11 @@ if ( jQuery( 'form[name="upgrade-themes"]' ).length ) {
 	 * @return  void
 	 */
 	public function enqueue_scripts () {
+
 		$screen = get_current_screen();
 		wp_enqueue_script( 'post' );
 		wp_register_script( 'ignition-updater-admin', $this->assets_url . 'js/admin.js', array( 'jquery' ) );
+		wp_enqueue_script( 'ignition-jquery-blockui', $this->assets_url . 'js/jquery.blockUI.min.js?version=1.6.0', array( 'jquery' ) );
 		wp_register_script( 'ignition-updater-admin-notice-hider', $this->assets_url . 'js/admin-notice-hider.js?version=1.6.0', array( 'jquery' ) );
 
 		// Only load script and localization on helper admin page.
@@ -392,7 +394,8 @@ if ( jQuery( 'form[name="upgrade-themes"]' ).length ) {
 		wp_enqueue_script( 'ignition-updater-admin-notice-hider' );
 		$localization = array(
 			'dismiss_renew_nonce' => wp_create_nonce( 'ignition_helper_dismiss_renew_nonce' ),
-			'dismiss_activation_nonce' => wp_create_nonce( 'ignition_helper_dismiss_activation_nonce' )
+			'dismiss_activation_nonce' => wp_create_nonce( 'ignition_helper_dismiss_activation_nonce' ),
+			'spinner' => $this->assets_url . 'images/ajax-loader.gif',
 		);
 		wp_localize_script( 'ignition-updater-admin-notice-hider', 'ignition_helper', $localization );
 	} // End enqueue_scripts()
@@ -667,7 +670,9 @@ if ( jQuery( 'form[name="upgrade-themes"]' ).length ) {
 		$response = array();
 		$products = get_plugins();
 
-		$themes = wp_get_themes();
+		// $themes = wp_get_themes();
+		$themes = array();
+		
 		if ( 0 < count( $themes ) ) {
 			foreach ( $themes as $k => $v ) {
 				$filepath = basename( $v->__get( 'stylesheet_dir' ) ) . '/style.css';

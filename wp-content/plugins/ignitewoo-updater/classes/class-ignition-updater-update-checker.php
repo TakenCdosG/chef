@@ -77,7 +77,7 @@ class Ignition_Updater_Update_Checker {
 	
 		// Check For Updates
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'plugin_update_check' ), 20, 1 );
-		add_filter( 'pre_set_site_transient_update_themes', array( $this, 'theme_update_check' ), 20, 1 );
+		//add_filter( 'pre_set_site_transient_update_themes', array( $this, 'theme_update_check' ), 20, 1 );
 
 		// Check For Plugin Information
 		add_filter( 'plugins_api', array( $this, 'plugin_information' ), 20, 3 );

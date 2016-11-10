@@ -474,7 +474,8 @@ HOWEVER, if a component product has a discount, there's a 'double' discount'
         //reapply rules to catch lifetime rule logic using email and address info...
 
         //v1.1.1.3  begin   added this to THIS side as well- Get the screen data...
-        if ($vtprd_cart->billto_name <= ' ' ) {
+        if ( ($vtprd_cart->billto_name <= ' ' ) &&
+             (defined('VTPRD_PRO_DIRNAME')) ) {  //v1.1.6.7 added if, this is a pro-only function {
             vtprd_get_purchaser_info_from_screen(); 
         }
         //v1.1.1.3  end
@@ -560,10 +561,12 @@ HOWEVER, if a component product has a discount, there's a 'double' discount'
         } //v1.1.1.3
         
       } else {
+        if (defined('VTPRD_PRO_DIRNAME')) {  //v1.1.6.7 added if, this is a pro-only function
+          //Get the screen data...
+          vtprd_get_purchaser_info_from_screen(); 
+                      
+        }
 
-        //Get the screen data...
-        vtprd_get_purchaser_info_from_screen(); 
-              
       }
 
       //error_log( print_r(  '$vtprd_rules_set at APPLY-RULES END', true ) );
