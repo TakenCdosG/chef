@@ -51,10 +51,10 @@ if ( ! function_exists('get_file_curl') ):
 			if ($curl === false and $iteration === false)
 			{
 				$new_url = wp_all_import_translate_uri($url);
-				return ($new_url !== $url) ? get_file_curl($new_url, $fullpath, $to_variable, true) : $response;								
+				return ($new_url !== $url) ? get_file_curl($new_url, $fullpath, $to_variable, true) : ( is_wp_error($response) ? $response : false );
 			}
 
-			return ($curl === false) ? $response : $curl;			
+			return ($curl === false) ? ( is_wp_error($response) ? $response : false ) : $curl;
 
 		}
 		

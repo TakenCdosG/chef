@@ -115,6 +115,23 @@
 				</td>
 			</tr>	
 		</tbody>
+	</table>	
+
+	<h3><?php _e('Force Stream Reader', 'wp_all_import_plugin') ?></h3>
+	
+	<table class="form-table">
+		<tbody>
+			<tr>
+				<th scope="row"><label><?php _e('Force WP All Import to use StreamReader instead of XMLReader to parse all import files', 'wp_all_import_plugin'); ?></label></th>
+				<td>
+					<fieldset style="padding:0;">						
+						<input type="hidden" name="force_stream_reader" value="0"/>
+						<label for="force_stream_reader"><input type="checkbox" value="1" id="force_stream_reader" name="force_stream_reader" <?php echo (($post['force_stream_reader']) ? 'checked="checked"' : ''); ?>><?php _e('Enable Stream Reader', 'wp_all_import_plugin'); ?></label>																				
+					</fieldset>					
+					<p class="description"><?php _e('XMLReader is much faster, but has a bug that sometimes prevents certain records from being imported with import files that contain special cases.', 'wp_all_import_plugin'); ?></p>
+				</td>
+			</tr>						
+		</tbody>
 	</table>			
 
 	<div class="clear"></div>
@@ -135,7 +152,7 @@
 <br>
 <h3><?php _e('Function Editor', 'wp_all_import_plugin') ?></h3>
 <div class="wpallimport-free-edition-notice" style="text-align:center; margin-top:0; margin-bottom: 40px;">
-	<a href="http://www.wpallimport.com/upgrade-to-pro/?utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=custom-fields" target="_blank" class="upgrade_link"><?php _e('Upgrade to the Pro edition of WP All Import to enable the Function Editor.', 'wp_all_import_plugin');?></a>
+	<a href="https://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1748&edd_options%5Bprice_id%5D=0&utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=custom-fields" target="_blank" class="upgrade_link"><?php _e('Upgrade to the Pro edition of WP All Import to use the Function Editor.', 'wp_all_import_plugin');?></a>
 	<p><?php _e('If you already own it, remove the free edition and install the Pro edition.', 'wp_all_import_plugin'); ?></p>
 </div>
 <textarea id="wp_all_import_code" name="wp_all_import_code"><?php echo "<?php\n\n?>";?></textarea>						

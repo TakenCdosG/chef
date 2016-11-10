@@ -231,7 +231,7 @@ class StringWalker implements ParserInterface
                     if ( strpos($cloud_element, ":") === false )
                     {
                         if ( isset($this->cloud[$cloud_element])) $this->cloud[$cloud_element]++; else $this->cloud[$cloud_element] = 1;    
-                    }
+                    }                    
                 }                
 
                 // Update depth

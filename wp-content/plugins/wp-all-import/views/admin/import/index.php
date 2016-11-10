@@ -91,16 +91,22 @@ $l10n = array(
 							<div id="plupload-ui" class="wpallimport-file-type-options">
 					            <div>				                
 					                <input type="hidden" name="filepath" value="<?php echo $post['filepath'] ?>" id="filepath"/>
-					                <a id="select-files" href="javascript:void(0);"/><?php _e('Click here to select file from your computer...', 'wp_all_import_plugin'); ?></a>
+					                <a id="select-files" href="javascript:void(0);" <?php if (empty($post['filepath'])):?>style="display:none;"<?php endif; ?> /><?php _e('Click here to select file from your computer...', 'wp_all_import_plugin'); ?></a>
 					                <div id="progressbar" class="wpallimport-progressbar">
-					                	
+					                	<?php if (!empty($post['filepath'])):?>
+					                	<span><?php _e('Upload Complete', 'wp_all_import_plugin');?></span> - <?php echo basename($post['filepath']); ?>
+					                	<?php endif; ?>
 					                </div>
-					                <div id="progress" class="wpallimport-progress">
+					                <div id="progress" class="wpallimport-progress" <?php if (!empty($post['filepath'])):?>style="visibility: visible; display: block;"<?php endif; ?>>
+					                	<?php if (!empty($post['filepath'])):?>
+					                	<div class="wpallimport-upload-process ui-progressbar ui-widget ui-widget-content ui-corner-all" id="upload_process" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="ui-progressbar-value ui-widget-header ui-corner-left ui-corner-right" style="width: 100%;"></div></div>
+					                	<?php else: ?>
 					                	<div id="upload_process" class="wpallimport-upload-process"></div>				                	
+					                	<?php endif; ?>
 					                </div>
 					            </div>
 					        </div>
-					        <div class="wpallimport-note" style="margin: 0 auto; font-size: 13px;"></div>					        
+					        <div class="wpallimport-note" style="margin: 0 auto; font-size: 13px;"><span></span></div>					        
 						</div>
 						<div class="wpallimport-upload-type-container" rel="url_type">						
 							<div class="wpallimport-file-type-options">
@@ -112,7 +118,7 @@ $l10n = array(
 							<div class="wpallimport-note" style="margin: 20px auto 0; font-size: 13px;">
 								<?php _e('<strong>Hint:</strong> After you create this import, you can schedule it to run automatically, on a pre-defined schedule, with cron jobs. If anything in your file has changed, WP All Import can update your site with the changed data automatically.', 'wp_all_import_plugin'); ?>
 								<div class="wpallimport-free-edition-notice" style="display:none;">									
-									<a href="http://www.wpallimport.com/upgrade-to-pro/?utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=download-from-url" target="_blank" class="upgrade_link"><?php _e('Upgrade to the Pro edition of WP All Import to use this feature.', 'wp_all_import_plugin');?></a>
+									<a href="https://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1748&edd_options%5Bprice_id%5D=0&utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=download-from-url" target="_blank" class="upgrade_link"><?php _e('Upgrade to the Pro edition of WP All Import to Download from URL', 'wp_all_import_plugin');?></a>
 									<p><?php _e('If you already own it, remove the free edition and install the Pro edition.', 'wp_all_import_plugin'); ?></p>
 								</div>
 							</div>							
@@ -135,9 +141,9 @@ $l10n = array(
 								<input type="hidden" name="file" value="<?php echo esc_attr($post['file']); ?>"/>									
 								
 								<div class="wpallimport-note" style="margin: 0 auto; font-size: 13px;">
-									<?php printf(__('Upload files to <strong>%s</strong> and they will appear in this list', 'wp_all_import_plugin'), $upload_dir['basedir'] . '/wpallimport/files') ?>
+									<?php printf(__('Files uploaded to <strong>%s</strong> will appear in this list.', 'wp_all_import_plugin'), $upload_dir['basedir'] . '/wpallimport/files') ?>
 									<div class="wpallimport-free-edition-notice">									
-										<a href="http://www.wpallimport.com/upgrade-to-pro/?utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=use-existing-file" target="_blank" class="upgrade_link"><?php _e('Upgrade to the Pro edition of WP All Import to use this feature.', 'wp_all_import_plugin');?></a>
+										<a href="https://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1748&edd_options%5Bprice_id%5D=0&utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=use-existing-file" target="_blank" class="upgrade_link"><?php _e('Upgrade to the Pro edition of WP All Import to Use Existing Files', 'wp_all_import_plugin');?></a>
 										<p><?php _e('If you already own it, remove the free edition and install the Pro edition.', 'wp_all_import_plugin'); ?></p>
 									</div>
 								</div>
@@ -277,8 +283,8 @@ $l10n = array(
 						<a class="button button-primary button-hero wpallimport-large-button wpallimport-notify-read-more" href="http://www.wpallimport.com/documentation/troubleshooting/problems-with-import-files/#invalid" target="_blank"><?php _e('Read More', 'wp_all_import_plugin');?></a>		
 					</div>	
 
-					<div class="wpallimport-free-edition-notice wpallimport-import-orders-notice" style="text-align:center; margin-top:20px; margin-bottom: 40px; display: none;">
-						<a href="http://www.wpallimport.com/upgrade-to-pro/?utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=custom-fields" target="_blank" class="upgrade_link"><?php _e('Upgrade to the Pro edition of WooCommerce add-on to import WooCommerce Orders.', 'wp_all_import_plugin');?></a>
+					<div class="wpallimport-free-edition-notice wpallimport-import-orders-notice" rel="<?php echo (defined('PMWI_EDITION') ? PMWI_EDITION : 'free'); ?>" style="text-align:center; margin-top:20px; margin-bottom: 40px; display: none;">
+						<a href="https://www.wpallimport.com/checkout/?edd_action=purchase_collection&taxonomy=download_category&terms=14&utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=custom-fields" target="_blank" class="upgrade_link"><?php _e('Upgrade to the Pro edition of WooCommerce Add-On to Import WooCommerce Orders', 'wp_all_import_plugin');?></a>
 						<p><?php _e('If you already own it, remove the free edition and install the Pro edition.', 'wp_all_import_plugin'); ?></p>
 					</div>			
 

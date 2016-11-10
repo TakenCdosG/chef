@@ -125,7 +125,7 @@ function pmxi_admin_notices() {
 					$m = __('<strong>Warning:</strong> You must <a href="http://www.wpallimport.com/upgrade-to-pro/?utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=images" target="_blank">upgrade to the Pro edition of WP All Import</a> to import images. The settings you configured in the images section will be ignored.', 'pmxi_plugin');
 					break;
 				case 4:
-					$m = __('<strong>Warning:</strong> You must <a href="http://www.wpallimport.com/upgrade-to-pro/?utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=custom-fields" target="_blank">upgrade to the Pro edition of WP All Import</a> to import data to Custom Fields. The settings you configured in the Custom Fields section will be ignored.', 'pmxi_plugin');
+					$m = __('<strong>Warning:</strong> You must <a href="https://www.wpallimport.com/checkout/?edd_action=add_to_cart&download_id=1748&edd_options%5Bprice_id%5D=0&utm_source=free-plugin&utm_medium=in-plugin&utm_campaign=custom-fields" target="_blank">upgrade to the Pro edition of WP All Import</a> to import data to Custom Fields. The settings you configured in the Custom Fields section will be ignored.', 'pmxi_plugin');
 					break;					
 				default:
 					$m = false;

@@ -10,7 +10,7 @@ Requires at least: 3.0.1
 
 Tested up to: 4.5
 
-Stable tag: 1.1.4
+Stable tag: 1.1.7
 
 License: GPLv2 or later
 
@@ -86,6 +86,17 @@ For complete list of features and details, please visit <a rel="nofollow" href="
 2. Checkout Screen
 
 == Changelog ==
+= 1.1.7 =
+
+* Fixed compatibility issue with WC 2.6.
+
+= 1.1.6 =
+
+* Fixed confliction with premium version.
+
+= 1.1.5 =
+
+* Fixed country saving issue.
 
 = 1.1.4 =
 

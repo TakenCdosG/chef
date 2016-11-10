@@ -84,8 +84,19 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 		parent::__construct($data);
 		$this->setTable(PMXI_Plugin::getInstance()->getTablePrefix() . 'imports');
 		$this->errors = new WP_Error();
+	}	
+
+	protected function update_meta( $pid, $key, $value ){
+
+		$meta_table = _get_meta_table( 'post' );
+
+		$where = array( 'post_id' => $pid, 'meta_key' => $key );
+
+		$result = $this->wpdb->update( $meta_table, array('meta_value' => $value), $where );
+
+		return $result;
 	}
-		
+	
 	public $post_meta_to_insert = array();
 
 	/**
@@ -135,12 +146,12 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 			}
 			else{
 				count($titles) and $post_excerpt = array_fill(0, count($titles), '');
-			}			
+			}										
 
 			if ( "xpath" == $this->options['status'] ){
 				$chunk == 1 and $logger and call_user_func($logger, __('Composing statuses...', 'wp_all_import_plugin'));			
 				$post_status = array();
-				if (!empty($this->options['status_xpath'])){
+				if ( ! empty($this->options['status_xpath']) ){
 					$post_status = XmlImportParser::factory($xml, $cxpath, $this->options['status_xpath'], $file)->parse($records); $tmp_files[] = $file;					
 				}
 				else{
@@ -391,7 +402,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 			$taxonomies = array();						
 			$exclude_taxonomies = apply_filters('pmxi_exclude_taxonomies', (class_exists('PMWI_Plugin')) ? array('post_format', 'product_type', 'product_shipping_class') : array('post_format'));	
 			$post_taxonomies = array_diff_key(get_taxonomies_by_object_type(array($this->options['custom_type']), 'object'), array_flip($exclude_taxonomies));
-			if ( ! empty($post_taxonomies) ):
+            if ( ! empty($post_taxonomies) && $this->options['custom_type'] != 'import_users' ):
 				foreach ($post_taxonomies as $ctx): if ("" == $ctx->labels->name or (class_exists('PMWI_Plugin') and strpos($ctx->name, "pa_") === 0 and $this->options['custom_type'] == "product")) continue;
 					$chunk == 1 and $logger and call_user_func($logger, sprintf(__('Composing terms for `%s` taxonomy...', 'wp_all_import_plugin'), $ctx->labels->name));
 					$tx_name = $ctx->name;
@@ -602,7 +613,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					}
 				endforeach;
 			endif;			
-			// [/custom taxonomies]															
+			// [/custom taxonomies]													
 
 			// Composing featured images			
 			$image_sections = apply_filters('wp_all_import_image_sections', array( 
@@ -853,14 +864,14 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					$logger and !$is_cron and PMXI_Plugin::$session->chunk_number++;
 					$logger and !$is_cron and PMXI_Plugin::$session->save_data();						
 					continue;																		
-				}
+				}				
 
 				wp_cache_flush();
 
 				$logger and call_user_func($logger, __('<b>ACTION</b>: pmxi_before_post_import ...', 'wp_all_import_plugin'));
 				do_action('pmxi_before_post_import', $this->id);															
 
-				if ( empty($titles[$i]) ) {
+				if ( empty($titles[$i]) && $this->options['custom_type'] != 'shop_order') {
 					if ( ! empty($addons_data['PMWI_Plugin']) and !empty($addons_data['PMWI_Plugin']['single_product_parent_ID'][$i]) ){
 						$titles[$i] = $addons_data['PMWI_Plugin']['single_product_parent_ID'][$i] . ' Product Variation';
 					}					
@@ -871,7 +882,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 				}				
 				
 				if ( $this->options['custom_type'] == 'import_users' ){					
-					$articleData = array(			
+					$articleData = apply_filters('wp_all_import_combine_article_data', array(			
 						'user_pass' => $addons_data['PMUI_Plugin']['pmui_pass'][$i],
 						'user_login' => $addons_data['PMUI_Plugin']['pmui_logins'][$i],
 						'user_nicename' => $addons_data['PMUI_Plugin']['pmui_nicename'][$i],
@@ -884,11 +895,11 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						'description' =>  $addons_data['PMUI_Plugin']['pmui_description'][$i],
 						'nickname' => $addons_data['PMUI_Plugin']['pmui_nickname'][$i],
 						'role' => ('' == $addons_data['PMUI_Plugin']['pmui_role'][$i]) ? 'subscriber' : strtolower($addons_data['PMUI_Plugin']['pmui_role'][$i]),
-					);							
+					), $this->options['custom_type'], $this->id, $i);							
 					$logger and call_user_func($logger, sprintf(__('Combine all data for user %s...', 'wp_all_import_plugin'), $articleData['user_login']));
 				} 
-				else {					
-					$articleData = array(
+				else {															
+					$articleData = apply_filters('wp_all_import_combine_article_data', array(
 						'post_type' => $post_type[$i],
 						'post_status' => ("xpath" == $this->options['status']) ? $post_status[$i] : $this->options['status'],
 						'comment_status' => ("xpath" == $this->options['comment_status']) ? $comment_status[$i] : $this->options['comment_status'],
@@ -902,15 +913,27 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						'post_author' => $post_author[$i],						
 						'menu_order' => (int) $menu_order[$i],
 						'post_parent' => ("no" == $this->options['is_multiple_page_parent']) ? (int) $page_parent[$i] : (int) $this->options['parent']
-					);
+					), $this->options['custom_type'], $this->id, $i);
 					$logger and call_user_func($logger, sprintf(__('Combine all data for post `%s`...', 'wp_all_import_plugin'), $articleData['post_title']));		
+
+					// if ( "xpath" == $this->options['status'] )
+					// {
+					// 	$status_object = get_post_status_object($post_status[$i]);	
+
+					// 	if ( empty($status_object) )
+					// 	{
+					// 		$articleData['post_status'] = 'draft';
+					// 		$logger and call_user_func($logger, sprintf(__('<b>WARNING</b>: Post status `%s` is not supported, post `%s` will be saved in draft.', 'wp_all_import_plugin'), $post_status[$i], $articleData['post_title']));
+					// 		$logger and !$is_cron and PMXI_Plugin::$session->warnings++;		
+					// 	}
+					// }
 				}						
 				
 				// Re-import Records Matching
 				$post_to_update = false; $post_to_update_id = false;
 
 				// An array representation of current XML node
-				$current_xml_node = wp_all_import_xml2array($rootNodes[$i]);
+				$current_xml_node = wp_all_import_xml2array($rootNodes[$i]);				
 
 				$check_for_duplicates = apply_filters('wp_all_import_is_check_duplicates', true, $this->id);
 				
@@ -976,7 +999,17 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 							$logger and call_user_func($logger, sprintf(__('Duplicate post wasn\'t found for post `%s`...', 'wp_all_import_plugin'), $articleData['post_title']));
 						}
 					}
-				}				
+				}	
+
+				$is_post_to_skip = apply_filters('wp_all_import_is_post_to_skip', false, $this->id, $current_xml_node, $i, $post_to_update_id);
+
+				if ( $is_post_to_skip ) {
+					$skipped++;																
+					$logger and !$is_cron and PMXI_Plugin::$session->warnings++;					
+					$logger and !$is_cron and PMXI_Plugin::$session->chunk_number++;
+					$logger and !$is_cron and PMXI_Plugin::$session->save_data();						
+					continue;																		
+				}			
 
 				if ( ! empty($specified_records) ) {
 
@@ -1156,10 +1189,10 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					// existing post not found though it's track was found... clear the leftover, plugin will continue to treat record as new
 					$postRecord->clear();
 					
-				}									
+				}				
 
 				$logger and call_user_func($logger, sprintf(__('Applying filter `pmxi_article_data` for `%s`', 'wp_all_import_plugin'), $articleData['post_title']));							
-				$articleData = apply_filters('pmxi_article_data', $articleData, $this, $post_to_update);
+				$articleData = apply_filters('pmxi_article_data', $articleData, $this, $post_to_update);					
 				
 				// no new records are created. it will only update posts it finds matching duplicates for
 				if (  ! $this->options['create_new_records'] and empty($articleData['ID']) ){ 
@@ -1282,7 +1315,13 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					}					
 					$pid = (empty($articleData['ID'])) ? wp_insert_post($articleData, true) : wp_update_post($articleData, true);
 				}
-				else{
+				else{										
+					if (empty($articleData['ID']) && email_exists( $articleData['user_email'] )){
+						$logger and call_user_func($logger, sprintf(__('<b>ERROR</b> Sorry, that email address `%s` is already used!', 'wp_all_import_plugin'), $articleData['user_email']));
+						$logger and !$is_cron and PMXI_Plugin::$session->errors++;
+						$skipped++;
+						continue;
+					}					
 					$pid = (empty($articleData['ID'])) ? wp_insert_user( $articleData ) : wp_update_user( $articleData );
 					$articleData['post_title'] = $articleData['user_login'];
 				}
@@ -1321,7 +1360,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						set_post_format($pid, ("xpath" == $this->options['post_format']) ? $post_format[$i] : $this->options['post_format'] ); 						
 						$logger and call_user_func($logger, sprintf(__('Associate post `%s` with post format %s ...', 'wp_all_import_plugin'), $articleData['post_title'], ("xpath" == $this->options['post_format']) ? $post_format[$i] : $this->options['post_format']));
 					}
-					// [/post format]									
+					// [/post format]										
 
 					// [addons import]
 
@@ -1357,7 +1396,81 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						}
 					}
 					
-					// [/addons import]						
+					// [/addons import]
+
+					if (empty($articleData['ID']) or $this->options['update_all_data'] == 'yes' or ($this->options['update_all_data'] == 'no' and $this->options['is_update_custom_fields']) or ($this->options['update_all_data'] == 'no' and $this->options['is_update_attributes'] and $post_type[$i] == "product" and class_exists('PMWI_Plugin'))) {																			
+
+						$encoded_meta = array();						
+						
+						if ( ! empty($serialized_meta)){
+
+							$processed_custom_fields = array();
+
+							foreach ($serialized_meta as $m_keys) { 
+
+								foreach ($m_keys as $m_key => $values) {									
+								
+									if (!empty($articleData['ID'])){
+																		
+										if ($this->options['update_all_data'] != 'yes'){
+
+											$field_to_update = false;
+
+											if ($this->options['is_update_custom_fields'] and $this->options['update_custom_fields_logic'] == "only" and ! empty($this->options['custom_fields_list']) and is_array($this->options['custom_fields_list']) and in_array($m_key, $this->options['custom_fields_list']) ) $field_to_update = true;
+											if ($this->options['is_update_custom_fields'] and $this->options['update_custom_fields_logic'] == "all_except" and ( empty($this->options['custom_fields_list']) or ! in_array($m_key, $this->options['custom_fields_list']) )) $field_to_update = true;
+											
+											if ( $this->options['update_custom_fields_logic'] == "full_update" ) $field_to_update = true;									
+
+											// apply addons filters
+											$field_to_update = apply_filters('pmxi_custom_field_to_update', $field_to_update, $post_type[$i], $this->options, $m_key);									
+
+											if ( ! $field_to_update ) {
+												$logger and call_user_func($logger, sprintf(__('- Custom field `%s` has been skipped attempted to record matching options ...', 'wp_all_import_plugin'), $m_key));
+												continue;										
+											}
+
+										}
+
+									}
+									
+									$logger and call_user_func($logger, __('- <b>ACTION</b>: pmxi_custom_field', 'wp_all_import_plugin'));																		
+									$cf_value = apply_filters('pmxi_custom_field', (is_serialized($values[$i])) ? unserialize($values[$i]) : $values[$i], $pid, $m_key, $existing_meta_keys, $this->id);
+									
+									//$this->pushmeta($pid, $m_key, $cf_value);																	
+									if ( $this->options['custom_type'] == 'import_users')
+									{										
+										if (in_array($m_key, $processed_custom_fields)) 
+										{
+											add_user_meta($pid, $m_key, $cf_value);
+										}
+										else
+										{
+											update_user_meta($pid, $m_key, $cf_value);	
+										} 
+									}
+									else
+									{
+										if (in_array($m_key, $processed_custom_fields))
+										{
+											add_post_meta($pid, $m_key, $cf_value);
+										}
+										else
+										{
+											update_post_meta($pid, $m_key, $cf_value);
+										}
+									}
+									if ( ! in_array($m_key, $processed_custom_fields)) $processed_custom_fields[] = $m_key;
+
+									$logger and call_user_func($logger, sprintf(__('- Custom field `%s` has been updated with value `%s` for post `%s` ...', 'wp_all_import_plugin'), $m_key, esc_attr(maybe_serialize($cf_value)), $articleData['post_title']));
+									$logger and call_user_func($logger, __('- <b>ACTION</b>: pmxi_update_post_meta', 'wp_all_import_plugin'));
+									do_action( 'pmxi_update_post_meta', $pid, $m_key, (is_serialized($values[$i])) ? unserialize($values[$i]) : $values[$i]); // hook that was triggered after post meta data updated	
+								}
+							}	
+
+							//$this->executeSQL();
+						}							
+					}
+					// [/custom fields]					
 
 					// Page Template
 					if ( ! empty($articleData['post_type']) and 'page' == $articleData['post_type'] and wp_all_import_is_update_cf('_wp_page_template', $this->options) and ( !empty($this->options['page_template']) or "no" == $this->options['is_multiple_page_template']) ){
@@ -1366,9 +1479,9 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					
 					// [featured image]
 
-					$is_images_to_update = apply_filters('pmxi_is_images_to_update', true, $articleData, $current_xml_node); 						
+					$is_images_to_update = apply_filters('pmxi_is_images_to_update', true, $articleData, $current_xml_node); 	
 
-					$is_allow_import_images = apply_filters('wp_all_import_is_allow_import_images', false, empty($articleData['post_type']) ? '' : $articleData['post_type']);					
+					$is_allow_import_images = apply_filters('wp_all_import_is_allow_import_images', false, empty($articleData['post_type']) ? '' : $articleData['post_type']);										
 
 					if ( $is_images_to_update and ! empty($uploads) and false === $uploads['error'] and ( ! empty($articleData['post_type']) and $articleData['post_type'] == "product" and class_exists('PMWI_Plugin') or $is_allow_import_images) and (empty($articleData['ID']) or $this->options['update_all_data'] == "yes" or ( $this->options['update_all_data'] == "no" and $this->options['is_update_images'])) ) {
 
@@ -1512,15 +1625,17 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 												$logger and call_user_func($logger, sprintf(__('- Importing image `%s` for `%s` ...', 'wp_all_import_plugin'), $img_url, $articleData['post_title']));
 
 												// generate local file name
-												$image_name = urldecode(($this->options[$option_slug . 'auto_rename_images'] and !empty($auto_rename_images_bundle[$slug][$i])) ? sanitize_file_name(($img_ext) ? str_replace("." . $default_extension, "", $auto_rename_images_bundle[$slug][$i]) : $auto_rename_images_bundle[$slug][$i]) : sanitize_file_name((($img_ext) ? str_replace("." . $default_extension, "", $bn) : $bn))) . (("" != $img_ext) ? '.' . $img_ext : '');
-												$image_name = apply_filters("wp_all_import_image_filename", $image_name, empty($img_titles[$k]) ? '' : $img_titles[$k], empty($img_captions[$k]) ? '' : $img_captions[$k], empty($img_alts[$k]) ? '' : $img_alts[$k], $articleData);
-
+												$image_name = urldecode(($this->options[$option_slug . 'auto_rename_images'] and !empty($auto_rename_images_bundle[$slug][$i])) ? sanitize_file_name(($img_ext) ? str_replace("." . $default_extension, "", $auto_rename_images_bundle[$slug][$i]) : $auto_rename_images_bundle[$slug][$i]) : sanitize_file_name((($img_ext) ? str_replace("." . $default_extension, "", $bn) : $bn))) . (("" != $img_ext) ? '.' . $img_ext : '');												
+												$image_name = apply_filters("wp_all_import_image_filename", $image_name, empty($img_titles[$k]) ? '' : $img_titles[$k], empty($img_captions[$k]) ? '' : $img_captions[$k], empty($img_alts[$k]) ? '' : $img_alts[$k], $articleData, $this->id);
+												
 												// if wizard store image data to custom field									
 												$create_image   = false;
 												$download_image = true;
 												$wp_filetype    = false;
 
-												if ($bundle_data['type'] == 'images' and base64_decode($url, true) !== false){
+												$is_base64_images_allowed = apply_filters("wp_all_import_is_base64_images_allowed", true, $url, $this->id);													
+
+												if ( $bundle_data['type'] == 'images' and base64_encode(base64_decode($url)) == $url and $is_base64_images_allowed ){
 													$img = @imagecreatefromstring(base64_decode($url));									    
 												    if($img)
 												    {	
@@ -1651,7 +1766,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 																@unlink($image_filepath); // delete file since failed upload may result in empty file created
 															} else{
 
-																if($bundle_data['type'] == 'images'){																	
+																if($bundle_data['type'] == 'images'){																														
 																	if( preg_match('%\W(svg)$%i', basename($image_filepath)) or $image_info = apply_filters('pmxi_getimagesize', @getimagesize($image_filepath), $image_filepath) and in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
 																		$create_image = true;		
 																		$logger and call_user_func($logger, sprintf(__('- Image `%s` has been successfully downloaded', 'wp_all_import_plugin'), $url));									
@@ -1671,42 +1786,48 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 
 															}												
 															
-															if ( ! $create_image and $img_url !== pmxi_convert_encoding($img_url) ){
-
-																$url = trim(pmxi_convert_encoding($img_url));
+															if ( ! $create_image )
+															{
+																if ( $img_url !== pmxi_convert_encoding($img_url) )
+																{
+																	$url = trim(pmxi_convert_encoding($img_url));
 																
-																$request = get_file_curl($url, $image_filepath);
-																
-																$get_ctx = stream_context_create(array('http' => array('timeout' => 5)));
+																	$request = get_file_curl($url, $image_filepath);
+																	
+																	$get_ctx = stream_context_create(array('http' => array('timeout' => 5)));
 
-																if ( (is_wp_error($request) or $request === false) and ! @file_put_contents($image_filepath, @file_get_contents($url, false, $get_ctx))) {
-																	$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s cannot be saved locally as %s', 'wp_all_import_plugin'), $url, $image_filepath));
-																	$logger and !$is_cron and PMXI_Plugin::$session->warnings++;
-																	@unlink($image_filepath); // delete file since failed upload may result in empty file created										
-																} 
-																else{
-																	if($bundle_data['type'] == 'images'){
-																		if( preg_match('%\W(svg)$%i', basename($image_filepath)) or $image_info = apply_filters('pmxi_getimagesize', @getimagesize($image_filepath), $image_filepath) and in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
-																			$create_image = true;	
-																			$logger and call_user_func($logger, sprintf(__('- Image `%s` has been successfully downloaded', 'wp_all_import_plugin'), $url));
-																		} else {
-																			$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s is not a valid image and cannot be set as featured one', 'wp_all_import_plugin'), $url));
-																			$logger and !$is_cron and PMXI_Plugin::$session->warnings++;
-																			@unlink($image_filepath);												
+																	if ( (is_wp_error($request) or $request === false) and ! @file_put_contents($image_filepath, @file_get_contents($url, false, $get_ctx))) {
+																		$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s cannot be saved locally as %s', 'wp_all_import_plugin'), $url, $image_filepath));
+																		$logger and !$is_cron and PMXI_Plugin::$session->warnings++;
+																		@unlink($image_filepath); // delete file since failed upload may result in empty file created										
+																	} 
+																	else{
+																		if($bundle_data['type'] == 'images'){
+																			if( preg_match('%\W(svg)$%i', basename($image_filepath)) or $image_info = apply_filters('pmxi_getimagesize', @getimagesize($image_filepath), $image_filepath) and in_array($image_info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
+																				$create_image = true;	
+																				$logger and call_user_func($logger, sprintf(__('- Image `%s` has been successfully downloaded', 'wp_all_import_plugin'), $url));
+																			} else {
+																				$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: File %s is not a valid image and cannot be set as featured one', 'wp_all_import_plugin'), $url));
+																				$logger and !$is_cron and PMXI_Plugin::$session->warnings++;
+																				@unlink($image_filepath);												
+																			}
 																		}
-																	}
-																	elseif($bundle_data['type'] == 'files'){
-																		if( ! $wp_filetype = wp_check_filetype(basename($image_filepath), null )) {
-																			$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: Can\'t detect attachment file type %s', 'wp_all_import_plugin'), trim($url)));
-																			$logger and !$is_cron and PMXI_Plugin::$session->warnings++;
-																			@unlink($image_filepath);
-																		}
-																		else {
-																			$create_image = true;											
-																			$logger and call_user_func($logger, sprintf(__('- File `%s` has been successfully found', 'wp_all_import_plugin'), $url));
+																		elseif($bundle_data['type'] == 'files'){
+																			if( ! $wp_filetype = wp_check_filetype(basename($image_filepath), null )) {
+																				$logger and call_user_func($logger, sprintf(__('- <b>WARNING</b>: Can\'t detect attachment file type %s', 'wp_all_import_plugin'), trim($url)));
+																				$logger and !$is_cron and PMXI_Plugin::$session->warnings++;
+																				@unlink($image_filepath);
+																			}
+																			else {
+																				$create_image = true;											
+																				$logger and call_user_func($logger, sprintf(__('- File `%s` has been successfully found', 'wp_all_import_plugin'), $url));
+																			}
 																		}
 																	}
 																}
+																else{
+																	@unlink($image_filepath);
+																}																
 															}
 														}												
 													}
@@ -1794,7 +1915,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 													$post_thumbnail_id = get_post_thumbnail_id( $pid );
 													
 													if ($bundle_data['type'] == 'images' and empty($post_thumbnail_id) and $this->options[$option_slug . 'is_featured'] ) {
-														set_post_thumbnail($pid, $attid);														
+														set_post_thumbnail($pid, $attid);																												
 													}
 													elseif(!in_array($attid, $gallery_attachment_ids) and $post_thumbnail_id != $attid){
 														$gallery_attachment_ids[] = $attid;	
@@ -2023,6 +2144,8 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 									unset($existing_taxonomies[$tx_name][$i]);
 								}
 
+								$assign_taxes = apply_filters('wp_all_import_set_post_terms', $assign_taxes, $tx_name, $pid, $this->id);
+
 								// create term if not exists								
 								if ( ! empty($txes[$i]) ):
 									foreach ($txes[$i] as $key => $single_tax) {
@@ -2134,7 +2257,8 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					$importData = array(
 						'pid' => $pid,						
 						'import' => $this,						
-						'logger' => $logger											
+						'logger' => $logger,
+						'is_update' => $is_update											
 					);
 
 					$saved_functions = apply_filters('wp_all_import_addon_saved_post', array());
@@ -2158,7 +2282,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					
 					// [/addons import]										
 					$logger and call_user_func($logger, __('<b>ACTION</b>: pmxi_saved_post', 'wp_all_import_plugin'));
-					do_action( 'pmxi_saved_post', $pid, $rootNodes[$i], $is_update); // hook that was triggered immediately after post saved
+					do_action( 'pmxi_saved_post', $pid, $rootNodes[$i], $is_update ); // hook that was triggered immediately after post saved
 					
 					if (empty($articleData['ID'])) $created++; else $updated++;						
 
@@ -2307,9 +2431,15 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 							
 							// Instead of deletion, set Custom Field
 							if ($this->options['is_update_missing_cf']){
-								update_post_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
+                                if ( $this->options['custom_type'] == "import_users" ){
+                                    update_user_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
+                                    $logger and call_user_func($logger, sprintf(__('Instead of deletion user with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
+                                }
+                                else{
+									update_post_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
+                                    $logger and call_user_func($logger, sprintf(__('Instead of deletion post with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
+                                }
 								$to_delete = false;
-								$logger and call_user_func($logger, sprintf(__('Instead of deletion post with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
 							}
 
 							// Instead of deletion, change post status to Draft							
@@ -2338,7 +2468,10 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 							{ 
 
 								$postRecord = new PMXI_Post_Record();
-								$postRecord->getById($missingPostRecord['id']);
+								$postRecord->getBy(array(
+									'post_id' => $missingPostRecord['post_id'],
+									'import_id' => $this->id,
+								));
 								if ( ! $postRecord->isEmpty() )
 								{
 									$postRecord->set(array(

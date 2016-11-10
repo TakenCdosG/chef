@@ -31,4 +31,5 @@ $config = array(
 	"log_storage" => 5,
 	"cron_sleep" => "",
 	"port" => "",
+	"force_stream_reader" => 0
 );
