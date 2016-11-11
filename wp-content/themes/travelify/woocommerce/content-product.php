@@ -10,7 +10,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.woothemes.com/document/template-structure/
+ * @see     https://docs.woocommerce.com/document/template-structure/
  * @author  WooThemes
  * @package WooCommerce/Templates
  * @version 2.6.1
@@ -35,52 +35,36 @@ if ( empty( $product ) || ! $product->is_visible() ) {
 	 * @hooked woocommerce_template_loop_product_link_open - 10
 	 */
 	do_action( 'woocommerce_before_shop_loop_item' );
-	?>
-	<a href="<?php the_permalink(); ?>">
-		<?php
-		/**
-		 * woocommerce_before_shop_loop_item_title hook.
-		 *
-		 * @hooked woocommerce_show_product_loop_sale_flash - 10
-		 * @hooked woocommerce_template_loop_product_thumbnail - 10
-		 */
-		?>
-		<div style="height:155px;display: block;position: relative;padding: 8px;">
-		<?php
-			do_action( 'woocommerce_before_shop_loop_item_title' );
-		?>
-		</div>
-		
-	    <div class="product-summary">
-			<?php
-			/**
-			 * woocommerce_shop_loop_item_title hook.
-			 *
-			 * @hooked woocommerce_template_loop_product_title - 10
-			 */
-			do_action( 'woocommerce_shop_loop_item_title' );
 
-			/**
-			 * woocommerce_after_shop_loop_item_title hook.
-			 *
-			 * @hooked woocommerce_template_loop_rating - 5
-			 * @hooked woocommerce_template_loop_price - 10
-			 */
-			do_action( 'woocommerce_after_shop_loop_item_title' );
-			?>
-         </div>
-	 </a>
-    <!--
-    <div class="after-product-summary">
-		<?php
-		/**
-		 * woocommerce_after_shop_loop_item hook.
-		 *
-		 * @hooked woocommerce_template_loop_product_link_close - 5
-		 * @hooked woocommerce_template_loop_add_to_cart - 10
-		 */
-		do_action( 'woocommerce_after_shop_loop_item' );
-		?>
-    </div>
-    -->
+	/**
+	 * woocommerce_before_shop_loop_item_title hook.
+	 *
+	 * @hooked woocommerce_show_product_loop_sale_flash - 10
+	 * @hooked woocommerce_template_loop_product_thumbnail - 10
+	 */
+	do_action( 'woocommerce_before_shop_loop_item_title' );
+
+	/**
+	 * woocommerce_shop_loop_item_title hook.
+	 *
+	 * @hooked woocommerce_template_loop_product_title - 10
+	 */
+	do_action( 'woocommerce_shop_loop_item_title' );
+
+	/**
+	 * woocommerce_after_shop_loop_item_title hook.
+	 *
+	 * @hooked woocommerce_template_loop_rating - 5
+	 * @hooked woocommerce_template_loop_price - 10
+	 */
+	do_action( 'woocommerce_after_shop_loop_item_title' );
+
+	/**
+	 * woocommerce_after_shop_loop_item hook.
+	 *
+	 * @hooked woocommerce_template_loop_product_link_close - 5
+	 * @hooked woocommerce_template_loop_add_to_cart - 10
+	 */
+	do_action( 'woocommerce_after_shop_loop_item' );
+	?>
 </li>

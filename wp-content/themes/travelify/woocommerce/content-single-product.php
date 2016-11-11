@@ -10,7 +10,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see 	    https://docs.woothemes.com/document/template-structure/
+ * @see 	    https://docs.woocommerce.com/document/template-structure/
  * @author 		WooThemes
  * @package 	WooCommerce/Templates
  * @version     1.6.4
@@ -36,52 +36,48 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 }
 ?>
 
-<div itemscope itemtype="<?php echo woocommerce_get_product_schema(); ?>" id="product-<?php the_ID(); ?>" <?php post_class(array('row')); ?>>
-   <div class="col-md-6">
-		<?php
-			/**
-			 * woocommerce_before_single_product_summary hook.
-			 *
-			 * @hooked woocommerce_show_product_sale_flash - 10
-			 * @hooked woocommerce_show_product_images - 20
-			 */
-			do_action( 'woocommerce_before_single_product_summary' );
-		?>
-		<div class="woocommerce_social_media_share_buttons">
-			<?php echo do_shortcode( '[woocommerce_social_media_share_buttons]' ); ?>
-		</div>
-	</div>
-	<div class="col-md-6">
-		<div class="summary entry-summary">
+<div itemscope itemtype="<?php echo woocommerce_get_product_schema(); ?>" id="product-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-			<?php
-				/**
-				 * woocommerce_single_product_summary hook.
-				 *
-				 * @hooked woocommerce_template_single_title - 5
-				 * @hooked woocommerce_template_single_rating - 10
-				 * @hooked woocommerce_template_single_price - 10
-				 * @hooked woocommerce_template_single_excerpt - 20
-				 * @hooked woocommerce_template_single_add_to_cart - 30
-				 * @hooked woocommerce_template_single_meta - 40
-				 * @hooked woocommerce_template_single_sharing - 50
-				 */
-				do_action( 'woocommerce_single_product_summary' );
-			?>
+	<?php
+		/**
+		 * woocommerce_before_single_product_summary hook.
+		 *
+		 * @hooked woocommerce_show_product_sale_flash - 10
+		 * @hooked woocommerce_show_product_images - 20
+		 */
+		do_action( 'woocommerce_before_single_product_summary' );
+	?>
 
-		</div><!-- .summary -->
+	<div class="summary entry-summary">
 
 		<?php
 			/**
-			 * woocommerce_after_single_product_summary hook.
+			 * woocommerce_single_product_summary hook.
 			 *
-			 * @hooked woocommerce_output_product_data_tabs - 10
-			 * @hooked woocommerce_upsell_display - 15
-			 * @hooked woocommerce_output_related_products - 20
+			 * @hooked woocommerce_template_single_title - 5
+			 * @hooked woocommerce_template_single_rating - 10
+			 * @hooked woocommerce_template_single_price - 10
+			 * @hooked woocommerce_template_single_excerpt - 20
+			 * @hooked woocommerce_template_single_add_to_cart - 30
+			 * @hooked woocommerce_template_single_meta - 40
+			 * @hooked woocommerce_template_single_sharing - 50
 			 */
-			do_action( 'woocommerce_after_single_product_summary' );
+			do_action( 'woocommerce_single_product_summary' );
 		?>
-    </div>
+
+	</div><!-- .summary -->
+
+	<?php
+		/**
+		 * woocommerce_after_single_product_summary hook.
+		 *
+		 * @hooked woocommerce_output_product_data_tabs - 10
+		 * @hooked woocommerce_upsell_display - 15
+		 * @hooked woocommerce_output_related_products - 20
+		 */
+		do_action( 'woocommerce_after_single_product_summary' );
+	?>
+
 	<meta itemprop="url" content="<?php the_permalink(); ?>" />
 
 </div><!-- #product-<?php the_ID(); ?> -->

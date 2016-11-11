@@ -10,7 +10,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see 	    https://docs.woothemes.com/document/template-structure/
+ * @see 	    https://docs.woocommerce.com/document/template-structure/
  * @author 		WooThemes
  * @package 	WooCommerce/Templates
  * @version     1.6.4
@@ -21,8 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 global $product, $woocommerce_loop;
-
-$posts_per_page = 4;
 
 if ( empty( $product ) || ! $product->exists() ) {
 	return;
@@ -47,18 +45,23 @@ $woocommerce_loop['name']    = 'related';
 $woocommerce_loop['columns'] = apply_filters( 'woocommerce_related_products_columns', $columns );
 
 if ( $products->have_posts() ) : ?>
-	<div class="related-products">
-		<div class="related products">
-			<h2><?php _e( 'Related Products', 'woocommerce' ); ?></h2>
-			<?php woocommerce_product_loop_start(); ?>
-				<?php while ( $products->have_posts() ) : $products->the_post(); ?>
 
-					<?php wc_get_template_part( 'content', 'product' ); ?>
+	<div class="related products">
 
-				<?php endwhile; // end of the loop. ?>
-			<?php woocommerce_product_loop_end(); ?>
-		</div>
+		<h2><?php _e( 'Related Products', 'woocommerce' ); ?></h2>
+
+		<?php woocommerce_product_loop_start(); ?>
+
+			<?php while ( $products->have_posts() ) : $products->the_post(); ?>
+
+				<?php wc_get_template_part( 'content', 'product' ); ?>
+
+			<?php endwhile; // end of the loop. ?>
+
+		<?php woocommerce_product_loop_end(); ?>
+
 	</div>
+
 <?php endif;
 
 wp_reset_postdata();
