@@ -209,7 +209,12 @@ function woo_bloyal_do_data_sync()
 
         $log .= "<b>Amount of products sync between bLoyal - WooCommerce: </b>" . count($newbLoyalInventoryProducts) . "<br/>";
         $log .= "<b>Amount of products found in bLoyal but not in WooCommerce: </b>" . count($notHandlebLoyalInventoryProducts) . "<br/>";
+        
         foreach ($notHandlebLoyalInventoryProducts as $key => $item) {
+          if(isset($newbLoyalInventoryEntityProducts[$key])){
+            // Save not Handle bLoyal InventoryProducts
+            update_option('bloyal_nothandlebloyalinventoryproducts_' . $key, array($newbLoyalInventoryEntityProducts[$key]));
+          }
           $log .= "<b> -- Product found in bLoyal but not in WooCommerce: </b>" . $key . "<br/>";
         }
 
