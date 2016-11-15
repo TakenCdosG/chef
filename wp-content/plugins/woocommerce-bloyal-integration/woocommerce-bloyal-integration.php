@@ -391,6 +391,69 @@ if (isset($_GET['bloyal_do_sync'])) {
 * =============================
 */
 
+/*
+* Maybe Synchronize bloyal inventory when one new products is added
+* $post_ID - (int) Post ID.
+* $post - (WP_Post) Post object.
+* $update - (bool) Whether this is an existing post being updated or not.
+*/
+function maybe_synchronize_bloyal_inventory( $post_id, $post, $update ) {
+  // If this is a revision, don't update anything.
+  if ( wp_is_post_revision( $post_id ) )
+    return;
+
+  $is_new = (!$update);
+  
+  if($post->post_type == "product"){
+      $pid = $post->ID;
+      $product = wc_get_product( $pid );
+      if($product != false ){
+        $SKU = $product->get_sku();
+        $name = 'bloyal_nothandlebloyalinventoryproducts_' . $SKU;
+        $product_bloyal_inventory = get_option($name, false);
+        if($product_bloyal_inventory != false){
+          update_post_meta( $pid, '_manage_stock', 'yes');
+          $entityProduct = reset($product_bloyal_inventory);
+          if($entityProduct->Entity){
+            $entity = $entityProduct->Entity;
+            $sku = isset($entity->ProductCode) ? $entity->ProductCode : '';
+            $inventory = 0;
+            if (isset($entityProduct->Entity->Available)) {
+              $inventory = intval($entityProduct->Entity->Available);
+            }
+            if(!empty($sku) && $sku == $SKU){
+              // Update stock quantity.
+              $stock = $inventory;
+              $status = ( 0 < $stock ) ? 'instock' : 'outofstock';
+              $product->set_stock($stock);
+              update_post_meta( $pid, '_stock', $stock );
+              update_post_meta( $pid, '_backorders', 'no' );
+              update_post_meta( $pid, '_stock_status', $status );
+              delete_transient( 'wc_product_total_stock_' . $pid );
+              // Save latest inventory to DB for comparison
+              $oldbLoyalInventoryProducts = get_option('bloyal_inventory');
+              if(!isset($oldbLoyalInventoryProducts[$sku])){
+                $oldbLoyalInventoryProducts[$sku] = $stock;
+              }
+              update_option('bloyal_inventory', $oldbLoyalInventoryProducts);
+
+              $oldbLoyalInventoryProductsEntities = get_option('bloyal_inventory_entities');
+              if(!isset($oldbLoyalInventoryProductsEntities[$sku])){
+                $oldbLoyalInventoryProductsEntities[$sku] = $entityProduct;
+              }
+              update_option('bloyal_inventory_entities', $oldbLoyalInventoryProductsEntities);
+              // Removing store data from db.
+              delete_option( $name ); 
+
+            }
+          }
+        }
+      }
+  } 
+}
+
+add_action( 'wp_insert_post', 'maybe_synchronize_bloyal_inventory', 10, 3 );
+
 /**
  * Action Reduce stock levels for all line items in the order.
  * Runs if stock management is enabled, but can be disabled on per-order basis by extensions @since 2.4.0 via woocommerce_can_reduce_order_stock hook.
