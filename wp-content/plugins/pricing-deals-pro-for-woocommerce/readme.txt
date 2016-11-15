@@ -3,7 +3,7 @@ Contributors: varktech
 Donate link: http://www.varktech.com/woocommerce/pricing-deals-pro-for-woocommerce/
 Requires at least: 3.3
 Tested up to: 4.5.2
-Stable tag: 1.1.6.3
+Stable tag: 1.1.6.7
 *
 Copyright 2016 AardvarkPC Services NZ, all rights reserved.  See license.txt for more details.
 *
@@ -39,6 +39,12 @@ Then Download and install the Pro Version from www.varktech.com
 
 == Changelog ==
 
+= 1.1.6.7 - 2016-07-18 =
+* Enhancement - Improved "Cheapest" Deals: 
+		Cheapest in the Get Product Group Filter, applies to Complete Group or ENTIRE cart!
+		Cheapest option now in the Rule's Blueprint area - **please hover** to read the how-to.
+
+
 = 1.1.6.3 - 2016-07-03 =
 * Fix - repair a rare auto add for free bug
 
@@ -47,8 +53,7 @@ Then Download and install the Pro Version from www.varktech.com
 
 = 1.1.1.2 - 2015-11-07 =
 * Fix - Coupon discount mini-cart intermittent display issue on 1st time 
-* Enhancement - Formerly, only a single "auto add for free" rule was allowed.
-		Now multiple "auto add for free" rules is fully supported. 
+
 
 = 1.1.1.1 - 2015-09-28 =
 * Fix - Autoadd Free item for product not yet in cart. 
