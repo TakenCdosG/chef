@@ -3,7 +3,7 @@ Contributors: webbistro
 Tags: media library, media category, media categories, media gallery, gallery shortcode, media tag, media tags, media taxonomy, media taxonomies, media uploader, mime type, mime, mime types, file types, media types, media filter, attachment, gallery, image, images, media, ux, user experience, wp-admin, admin, taxonomy, taxonomies
 Requires at least: 4.5
 Tested up to: 4.6.1
-Stable tag: 2.3.2
+Stable tag: 2.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -162,6 +162,14 @@ Please notice that you use the Enhanced Media Library with other plugins that ad
 
 == Changelog ==
 
+= 2.3.3 =
+*Release Date - November 13, 2016*
+
+= Bugfixes =
+* A bug of v2.3.2 causing issues to some third-party plugins and Customizer fixed
+
+
+&nbsp;
 = 2.3.2 =
 *Release Date - November 11, 2016*
 

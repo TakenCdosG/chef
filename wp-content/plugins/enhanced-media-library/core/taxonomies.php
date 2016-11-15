@@ -561,39 +561,45 @@ if ( ! function_exists( 'wpuxss_eml_attachment_fields_to_edit' ) ) {
 
     function wpuxss_eml_attachment_fields_to_edit( $form_fields, $post ) {
 
+        if ( ! function_exists( 'wp_terms_checklist' ) ) {
+            return $form_fields;
+        }
+
+
         $wpuxss_eml_tax_options = get_option('wpuxss_eml_tax_options');
 
 
-        if ( function_exists( 'wp_terms_checklist' ) ) {
+        foreach( $form_fields as $field => $args ) {
 
-            foreach( $form_fields as $field => $args ) {
+            if ( ! taxonomy_exists( $field ) ) {
+                continue;
+            }
 
-                if ( (bool) $wpuxss_eml_tax_options['edit_all_as_hierarchical'] || (bool) $args['hierarchical'] ) {
+            if ( (bool) $wpuxss_eml_tax_options['edit_all_as_hierarchical'] || (bool) $args['hierarchical'] ) {
 
-                    ob_start();
+                ob_start();
 
-                        wp_terms_checklist( $post->ID, array( 'taxonomy' => $field, 'checked_ontop' => false, 'walker' => new Walker_Media_Taxonomy_Checklist() ) );
+                    wp_terms_checklist( $post->ID, array( 'taxonomy' => $field, 'checked_ontop' => false, 'walker' => new Walker_Media_Taxonomy_Checklist() ) );
 
-                        $content = ob_get_contents();
+                    $content = ob_get_contents();
 
-                        if ( $content )
-                            $html = '<ul class="term-list">' . $content . '</ul>';
-                        else
-                            $html = '<ul class="term-list"><li>No ' . $args['label'] . ' found.</li></ul>';
+                    if ( $content )
+                        $html = '<ul class="term-list">' . $content . '</ul>';
+                    else
+                        $html = '<ul class="term-list"><li>No ' . $args['label'] . ' found.</li></ul>';
 
-                    ob_end_clean();
+                ob_end_clean();
 
-                    unset( $form_fields[$field]['value'] );
+                unset( $form_fields[$field]['value'] );
 
-                    $form_fields[$field]['input'] = 'html';
-                    $form_fields[$field]['html'] = $html;
-                }
-                else {
-                    $values = wp_get_object_terms( $post->ID, $field, array( 'fields' => 'names' ) );
-                    $form_fields[$field]['value'] = join(', ', $values);
-                } // if
-            } // foreach
-        } // if
+                $form_fields[$field]['input'] = 'html';
+                $form_fields[$field]['html'] = $html;
+            }
+            else {
+                $values = wp_get_object_terms( $post->ID, $field, array( 'fields' => 'names' ) );
+                $form_fields[$field]['value'] = join(', ', $values);
+            } // if
+        } // foreach
 
         return $form_fields;
     }
