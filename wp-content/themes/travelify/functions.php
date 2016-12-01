@@ -97,6 +97,22 @@ if (!function_exists('dpm')) {
 
 }
 
+/**
+ * Function to set a minimum/cap on the shipping rates.
+ */
+function my_minimum_limit_shipping_rates_function( $rates, $package ) {
+    $shipping_minimum = 10; // The minimum amount would be $10
+    // Loop through all rates
+    foreach ( $rates as $rate_id => $rate ) {
+        // Check if the rate is higher then a certain amount
+        if ( $rate->cost < $shipping_minimum ) {
+            $rate->cost = $shipping_minimum;
+        }
+    }
+    return $rates;
+}
+add_action( 'woocommerce_package_rates', 'my_minimum_limit_shipping_rates_function', 10, 2 );
+
 
 if (!function_exists('travelify_setup')):
 
