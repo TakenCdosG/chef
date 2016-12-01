@@ -103,10 +103,14 @@ if (!function_exists('dpm')) {
 function my_minimum_limit_shipping_rates_function( $rates, $package ) {
     $shipping_minimum = 10; // The minimum amount would be $10
     // Loop through all rates
-    dpm($rates);
+    // dpm($rates);
     foreach ( $rates as $rate_id => $rate ) {
+        $is_local_picukp = FALSE;
+        if(strpos($rate_id, 'local_pickup') !== false){
+             $is_local_picukp = TRUE;
+        }
         // Check if the rate is higher then a certain amount
-        if ( $rate->cost < $shipping_minimum ) {
+        if ( (!$is_local_picukp) && $rate->cost < $shipping_minimum ) {
             $rate->cost = $shipping_minimum;
         }
     }
