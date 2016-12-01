@@ -103,6 +103,7 @@ if (!function_exists('dpm')) {
 function my_minimum_limit_shipping_rates_function( $rates, $package ) {
     $shipping_minimum = 10; // The minimum amount would be $10
     // Loop through all rates
+    dpm($rates);
     foreach ( $rates as $rate_id => $rate ) {
         // Check if the rate is higher then a certain amount
         if ( $rate->cost < $shipping_minimum ) {
